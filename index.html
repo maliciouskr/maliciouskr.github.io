@@ -229,6 +229,131 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/Filebeat-Logstash加密传输配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Maliciouskr Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/08/Filebeat-Logstash加密传输配置/" itemprop="url">Filebeat&Logstash加密传输配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-08T12:30:58+08:00">
+                2018-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="elastic-stack-yum源"><a href="#elastic-stack-yum源" class="headerlink" title="elastic stack yum源"></a>elastic stack yum源</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch</span><br><span class="line"></span><br><span class="line"># cat &gt; /etc/yum.repos.d/elastic.repo &lt;&lt; EOF</span><br><span class="line">[elasticsearch-6.x]</span><br><span class="line">name=Elasticsearch repository for 6.x packages</span><br><span class="line">baseurl=https://artifacts.elastic.co/packages/6.x/yum</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch</span><br><span class="line">enabled=1</span><br><span class="line">autorefresh=1</span><br><span class="line">type=rpm-md</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="生成证书"><a href="#生成证书" class="headerlink" title="生成证书"></a>生成证书</h2><p>修改openssl.cnf</p>
+<p>找到 [ v3_ca ]<br>加入下边一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">vi /etc/pki/tls/openssl.cnf</span><br><span class="line">subjectAltName = IP:这里写ip地址</span><br></pre></td></tr></table></figure>
+<p>然后生成证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -subj &apos;/CN=ossec-hw-215/&apos; -x509 -days $((100 * 365)) -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/filebeat_215.key -out /etc/pki/tls/certs/filebeat_215.crt</span><br></pre></td></tr></table></figure></p>
+<h2 id="filebeat-yml配置"><a href="#filebeat-yml配置" class="headerlink" title="filebeat.yml配置"></a>filebeat.yml配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#----------------------------- Logstash output --------------------------------</span><br><span class="line">output.logstash:</span><br><span class="line">  # The Logstash hosts</span><br><span class="line">  hosts: [&quot;192.168.1.100:50055&quot;]</span><br><span class="line"></span><br><span class="line">  # Optional SSL. By default is off.</span><br><span class="line">  # List of root certificates for HTTPS server verifications</span><br><span class="line">  ssl.certificate_authorities: [&quot;/etc/pki/tls/certs/logstash.crt&quot;]</span><br><span class="line"></span><br><span class="line">  # Certificate for SSL client authentication</span><br><span class="line">  ssl.certificate: &quot;/etc/pki/tls/certs/filebeat_73.crt&quot;</span><br><span class="line"></span><br><span class="line">  # Client Certificate Key</span><br><span class="line">  ssl.key: &quot;/etc/pki/tls/private/filebeat_73.key&quot;</span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/Filebeat Logstash 加密/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -634,7 +759,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

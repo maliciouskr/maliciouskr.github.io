@@ -81,14 +81,14 @@
 
 <meta name="description" content="elastic stack yum源123456789101112# rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch# cat &amp;gt; /etc/yum.repos.d/elastic.repo &amp;lt;&amp;lt; EOF[elasticsearch-6.x]name=Elasticsearch repository f">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/2018/05/08/Filebeat Logstash 加密/index.html">
+<meta property="og:title" content="Filebeat&amp;Logstash加密传输配置">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/Filebeat-Logstash加密传输配置/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="elastic stack yum源123456789101112# rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch# cat &amp;gt; /etc/yum.repos.d/elastic.repo &amp;lt;&amp;lt; EOF[elasticsearch-6.x]name=Elasticsearch repository f">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-08T04:23:02.000Z">
+<meta property="og:updated_time" content="2018-05-08T04:32:50.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Filebeat&amp;Logstash加密传输配置">
 <meta name="twitter:description" content="elastic stack yum源123456789101112# rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch# cat &amp;gt; /etc/yum.repos.d/elastic.repo &amp;lt;&amp;lt; EOF[elasticsearch-6.x]name=Elasticsearch repository f">
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/08/Filebeat Logstash 加密/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/Filebeat-Logstash加密传输配置/"/>
 
 
 
 
 
-  <title> | Hexo</title>
+  <title>Filebeat&Logstash加密传输配置 | Hexo</title>
   
 
 
@@ -232,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/Filebeat Logstash 加密/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/Filebeat-Logstash加密传输配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Maliciouskr Doe">
@@ -249,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Filebeat&Logstash加密传输配置</h1>
         
 
         <div class="post-meta">
@@ -261,7 +261,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-08T12:22:04+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-08T12:30:58+08:00">
                 2018-05-08
               </time>
             
@@ -304,7 +304,7 @@
 <p>找到 [ v3_ca ]<br>加入下边一行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">vi /etc/pki/tls/openssl.cnf</span><br><span class="line">subjectAltName = IP:这里写ip地址</span><br></pre></td></tr></table></figure>
 <p>然后生成证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -subj &apos;/CN=ossec-hw-215/&apos; -x509 -days $((100 * 365)) -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/filebeat_215.key -out /etc/pki/tls/certs/filebeat_215.crt</span><br></pre></td></tr></table></figure></p>
-<h2 id="filebeat-yml配置"><a href="#filebeat-yml配置" class="headerlink" title="filebeat.yml配置"></a>filebeat.yml配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#----------------------------- Logstash output --------------------------------</span><br><span class="line">output.logstash:</span><br><span class="line">  # The Logstash hosts</span><br><span class="line">  hosts: [&quot;192.168.1.100:50055&quot;]</span><br><span class="line"></span><br><span class="line">  # Optional SSL. By default is off.</span><br><span class="line">  # List of root certificates for HTTPS server verifications</span><br><span class="line">  ssl.certificate_authorities: [&quot;/etc/pki/tls/certs/logstash.crt&quot;]</span><br><span class="line"></span><br><span class="line">  # Certificate for SSL client authentication</span><br><span class="line">  ssl.certificate: &quot;/etc/pki/tls/certs/filebeat_73.crt&quot;</span><br><span class="line"></span><br><span class="line">  # Client Certificate Key</span><br><span class="line">  ssl.key: &quot;/etc/pki/tls/private/filebeat_73.key&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="filebeat-yml配置"><a href="#filebeat-yml配置" class="headerlink" title="filebeat.yml配置"></a>filebeat.yml配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#----------------------------- Logstash output --------------------------------</span><br><span class="line">output.logstash:</span><br><span class="line">  # The Logstash hosts</span><br><span class="line">  hosts: [&quot;192.168.1.100:50055&quot;]</span><br><span class="line"></span><br><span class="line">  # Optional SSL. By default is off.</span><br><span class="line">  # List of root certificates for HTTPS server verifications</span><br><span class="line">  ssl.certificate_authorities: [&quot;/etc/pki/tls/certs/logstash.crt&quot;]</span><br><span class="line"></span><br><span class="line">  # Certificate for SSL client authentication</span><br><span class="line">  ssl.certificate: &quot;/etc/pki/tls/certs/filebeat_73.crt&quot;</span><br><span class="line"></span><br><span class="line">  # Client Certificate Key</span><br><span class="line">  ssl.key: &quot;/etc/pki/tls/private/filebeat_73.key&quot;</span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -329,8 +329,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/02/test-my-site/" rel="next" title="test_my_site">
-                <i class="fa fa-chevron-left"></i> test_my_site
+              <a href="/2018/05/08/Filebeat Logstash 加密/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -338,10 +338,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/08/Filebeat-Logstash加密传输配置/" rel="prev" title="Filebeat&Logstash加密传输配置">
-                Filebeat&Logstash加密传输配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
