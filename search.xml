@@ -7,7 +7,7 @@
   </entry>
   <entry>
     <title><![CDATA[Filebeat&Logstash加密传输配置]]></title>
-    <url>%2F2018%2F05%2F08%2FFilebeat-Logstash%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93%E9%85%8D%E7%BD%AE%2F</url>
+    <url>%2F2017%2F08%2F08%2FFilebeat-Logstash%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93%E9%85%8D%E7%BD%AE%2F</url>
     <content type="text"><![CDATA[elastic stack yum源123456789101112# rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch# cat &gt; /etc/yum.repos.d/elastic.repo &lt;&lt; EOF[elasticsearch-6.x]name=Elasticsearch repository for 6.x packagesbaseurl=https://artifacts.elastic.co/packages/6.x/yumgpgcheck=1gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearchenabled=1autorefresh=1type=rpm-mdEOF 生成证书修改openssl.cnf 找到 [ v3_ca ]加入下边一行： 123vi /etc/pki/tls/openssl.cnfsubjectAltName = IP:这里写ip地址 然后生成证书1openssl req -subj &apos;/CN=ossec-hw-215/&apos; -x509 -days $((100 * 365)) -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/filebeat_215.key -out /etc/pki/tls/certs/filebeat_215.crt filebeat.yml配置12345678910111213141516#----------------------------- Logstash output --------------------------------output.logstash: # The Logstash hosts hosts: [&quot;192.168.1.100:50055&quot;] # Optional SSL. By default is off. # List of root certificates for HTTPS server verifications ssl.certificate_authorities: [&quot;/etc/pki/tls/certs/logstash.crt&quot;] # Certificate for SSL client authentication ssl.certificate: &quot;/etc/pki/tls/certs/filebeat_73.crt&quot; # Client Certificate Key ssl.key: &quot;/etc/pki/tls/private/filebeat_73.key&quot;`]]></content>
   </entry>
 </search>
