@@ -79,20 +79,21 @@
 
 
 
-<meta name="description" content="0x00 概述最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。  上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿： ngx_lua_waf简介 ngx_lua_waf，是一个轻量级、高性能的WAF模块。  防止sql注入，本地包含，部分溢出，fuzzing测试，XSS, SSRF等web攻击 防止svn/备份之类文件泄漏 防止Apach">
+<meta name="description" content="0x00 概述最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。  上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿：  ngx_lua_waf简介 ngx_lua_waf，是一个轻量级、高性能的WAF模块。  防止sql注入，本地包含，部分溢出，fuzzing测试，XSS, SSRF等web攻击 防止svn/备份之类文件泄漏 防止Apac">
 <meta name="keywords" content="Testing,入侵检测,waf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="结合Fluentd实现ngx_lua_waf页面展示">
 <meta property="og:url" content="https://maliciouskr.cc/2016/10/20/结合Fluentd实现ngx_lua_waf页面展示/index.html">
 <meta property="og:site_name" content="MaliciousKr.Cc">
-<meta property="og:description" content="0x00 概述最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。  上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿： ngx_lua_waf简介 ngx_lua_waf，是一个轻量级、高性能的WAF模块。  防止sql注入，本地包含，部分溢出，fuzzing测试，XSS, SSRF等web攻击 防止svn/备份之类文件泄漏 防止Apach">
+<meta property="og:description" content="0x00 概述最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。  上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿：  ngx_lua_waf简介 ngx_lua_waf，是一个轻量级、高性能的WAF模块。  防止sql注入，本地包含，部分溢出，fuzzing测试，XSS, SSRF等web攻击 防止svn/备份之类文件泄漏 防止Apac">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://image.3001.net/images/20170223/14878422689085.png">
+<meta property="og:image" content="https://maliciouskr.cc/2016/10/20/结合Fluentd实现ngx_lua_waf页面展示/fluentd_waf1.jpg">
 <meta property="og:image" content="http://docs.fluentd.org/images/fluentd-architecture.png">
-<meta property="og:updated_time" content="2018-09-30T06:30:52.000Z">
+<meta property="og:updated_time" content="2018-09-30T06:53:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="结合Fluentd实现ngx_lua_waf页面展示">
-<meta name="twitter:description" content="0x00 概述最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。  上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿： ngx_lua_waf简介 ngx_lua_waf，是一个轻量级、高性能的WAF模块。  防止sql注入，本地包含，部分溢出，fuzzing测试，XSS, SSRF等web攻击 防止svn/备份之类文件泄漏 防止Apach">
+<meta name="twitter:description" content="0x00 概述最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。  上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿：  ngx_lua_waf简介 ngx_lua_waf，是一个轻量级、高性能的WAF模块。  防止sql注入，本地包含，部分溢出，fuzzing测试，XSS, SSRF等web攻击 防止svn/备份之类文件泄漏 防止Apac">
 <meta name="twitter:image" content="http://image.3001.net/images/20170223/14878422689085.png">
 
 
@@ -370,6 +371,7 @@
         <h3 id="0x00-概述"><a href="#0x00-概述" class="headerlink" title="0x00 概述"></a>0x00 概述</h3><p>最近在看lua_waf,看看怎么搞个web界面出来，于是有了这篇笔记。</p>
 <p><img src="http://image.3001.net/images/20170223/14878422689085.png" alt="image"></p>
 <p>上图是大佬分享的waf日志处理流程，不过我这篇文章讲的就简单多了，如下, 纯属搞着玩儿：</p>
+<img src="/2016/10/20/结合Fluentd实现ngx_lua_waf页面展示/fluentd_waf1.jpg" title="说明">
 <p><strong>ngx_lua_waf简介</strong></p>
 <p>ngx_lua_waf，是一个轻量级、高性能的WAF模块。</p>
 <ul>
