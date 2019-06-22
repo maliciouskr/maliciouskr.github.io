@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0x00 前言小团队，安全投入有限，入侵检测能力不足，攻防对抗不对等，实在尴尬，迫不得已选择开源方案！ 以下是个人折腾Suricata的一些纪录、想法，不是很成熟、甚至可能观点有错，分享出来，万一有共鸣呢？ 0x01 Suricata简介Suricata是一款基于TCP/IP协议栈解析与安全数据分析引擎：  能够进行实时入侵检测（IDS）、内联入侵预防（IPS）、网络安全监控（NSM）和离线PCA">
+<meta name="keywords" content="安全，信息安全，运维安全，代码审计，渗透测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Suricata构建网络层入侵检测">
+<meta property="og:url" content="https://maliciouskr.cc/2019/06/22/使用Suricata构建网络层入侵检测/index.html">
+<meta property="og:site_name" content="MaliciousKr.Cc">
+<meta property="og:description" content="0x00 前言小团队，安全投入有限，入侵检测能力不足，攻防对抗不对等，实在尴尬，迫不得已选择开源方案！ 以下是个人折腾Suricata的一些纪录、想法，不是很成熟、甚至可能观点有错，分享出来，万一有共鸣呢？ 0x01 Suricata简介Suricata是一款基于TCP/IP协议栈解析与安全数据分析引擎：  能够进行实时入侵检测（IDS）、内联入侵预防（IPS）、网络安全监控（NSM）和离线PCA">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.loli.net/2019/06/22/5d0da21ec5a8962270.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/22/5d0db00b2bf0936403.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/22/5d0dadb565ff311403.png">
+<meta property="og:updated_time" content="2019-06-22T04:53:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Suricata构建网络层入侵检测">
+<meta name="twitter:description" content="0x00 前言小团队，安全投入有限，入侵检测能力不足，攻防对抗不对等，实在尴尬，迫不得已选择开源方案！ 以下是个人折腾Suricata的一些纪录、想法，不是很成熟、甚至可能观点有错，分享出来，万一有共鸣呢？ 0x01 Suricata简介Suricata是一款基于TCP/IP协议栈解析与安全数据分析引擎：  能够进行实时入侵检测（IDS）、内联入侵预防（IPS）、网络安全监控（NSM）和离线PCA">
+<meta name="twitter:image" content="https://i.loli.net/2019/06/22/5d0da21ec5a8962270.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://maliciouskr.cc/2019/06/22/使用Suricata构建网络层入侵检测/"/>
+
+
+
+
+
+  <title>使用Suricata构建网络层入侵检测 | MaliciousKr.Cc</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a03f7a41a75a1b30590ab90cb4952873";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">MaliciousKr.Cc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://maliciouskr.cc/2019/06/22/使用Suricata构建网络层入侵检测/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MaliciousKr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://www.maliciouskr.cc/favicon.ico">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MaliciousKr.Cc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用Suricata构建网络层入侵检测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-22T12:08:23+08:00">
+                2019-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>小团队，安全投入有限，入侵检测能力不足，攻防对抗不对等，实在尴尬，迫不得已选择开源方案！</p>
+<p>以下是个人折腾Suricata的一些纪录、想法，不是很成熟、甚至可能观点有错，分享出来，万一有共鸣呢？</p>
+<h1 id="0x01-Suricata简介"><a href="#0x01-Suricata简介" class="headerlink" title="0x01 Suricata简介"></a>0x01 Suricata简介</h1><p>Suricata是一款基于TCP/IP协议栈解析与安全数据分析引擎：</p>
+<ul>
+<li>能够进行实时入侵检测（IDS）、内联入侵预防（IPS）、网络安全监控（NSM）和离线PCAP处理，全面支持Snort规则；</li>
+<li>Suricata使用强大而广泛的规则和签名语言检查网络流量，并具有强大的Lua脚本支持来检测复杂的威胁；</li>
+<li>使用标准的输入和输出格式（如yaml和json），与现有的siem、splunk、logstash/elasticsearch、kibana和其他数据库等工具的集成变得很容易；</li>
+<li>入侵检测规则更新活跃，具有较强的社区支持。</li>
+</ul>
+<p>支持数据包解码：</p>
+<ul>
+<li>IPv4, IPv6, TCP, UDP, SCTP, ICMPv4, ICMPv6, GRE</li>
+<li>Ethernet, PPP, PPPoE, Raw, SLL, VLAN, QINQ, MPLS, ERSPAN</li>
+<li>HTTP，SSL，TLS，SMB，DCERPC，SMTP，FTP，SSH，DNS，Modbus，ENIP / CIP，DNP3，NFS，NTP，DHCP，TFTP，KRB5，IKEv2</li>
+</ul>
+<h1 id="0x02-选择Suricata的原因"><a href="#0x02-选择Suricata的原因" class="headerlink" title="0x02 选择Suricata的原因"></a>0x02 选择Suricata的原因</h1><p>要做网络层的入侵检、流量分析，能想到的就是Snort、Suricata、Bro，它们是业界比较成熟的开源方案，许多安全公司招聘也列出了熟悉 Suricata 优先,也是很‘优秀’。</p>
+<ul>
+<li>Snort始于1998，对于适度流量场景，算是一个比较好的解决方案；</li>
+<li>Suricata始于2009，我个人理解为是针对大规模网络的snort扩展，在大流量环境下，丢包率源低于snort，性能表现更优秀；</li>
+<li>Bro是一种被动的开源网络流量分析器，可以检查链路上的所有流量，以查看可疑活动的迹象，大流量环境下表现比较优秀。Bro支持甚至在安全域之外的各种流量分析任务，包括性能测量和帮助解决问题，与Snort或Suricata中的规则集相比，其强大的脚本功能绝对具有更大的优势。</li>
+</ul>
+<p>可以参考：</p>
+<p><a href="https://blog.csdn.net/yrx0619/article/details/81267236" target="_blank" rel="noopener">https://blog.csdn.net/yrx0619/article/details/81267236</a></p>
+<p><a href="https://bricata.com/resources/white-paper/bro-vs-snot-or-suricata/" target="_blank" rel="noopener">https://bricata.com/resources/white-paper/bro-vs-snot-or-suricata/</a></p>
+<p>最终，选择Suricata的原因是方便上手，与snort相通，社区资料也比较多，Bro的资料相比之下就少很多了，并且还要花时间研究怎么写脚本，精力与回报不成正比。</p>
+<h1 id="0x03-DIY-Suricata"><a href="#0x03-DIY-Suricata" class="headerlink" title="0x03 DIY Suricata"></a>0x03 DIY Suricata</h1><p>实际业务环境下：</p>
+<ul>
+<li>机房分布也比较多，需要镜像过来做分析的流量分散；</li>
+<li>边界流量比较大（单个机房最少的，一分钟也有7、8个g的量），对于这种大流量，直接部署Suricata肯定没啥用，根本扛不住；</li>
+<li>分析结果怎么存储展示？</li>
+<li>告警一大堆，谁来看？</li>
+</ul>
+<p>所以：</p>
+<ul>
+<li>Suricata分布式部署，适配多机房的业务场景，数据统计上报到es；</li>
+<li>流量若扛不住，就将导入的镜像流量使用dumpcap进行切割后再给Suricata进行分析；</li>
+<li>Suricata分析出来的日志存elasticsearch（elk），大数据分析；</li>
+<li>diy了一个安全分析后台，把已有的hids数据、日志系统的数据关联起来，发现更有价值、紧急层度更高的攻击事件；</li>
+<li>综合分析出来的攻击事件，通过硬件FW、系统iptables阻断。</li>
+</ul>
+<p><img src="https://i.loli.net/2019/06/22/5d0da21ec5a8962270.png" alt="image"></p>
+<h1 id="0x04-部署"><a href="#0x04-部署" class="headerlink" title="0x04 部署"></a>0x04 部署</h1><h3 id="Suricata部署："><a href="#Suricata部署：" class="headerlink" title="Suricata部署："></a>Suricata部署：</h3><p>centos7上部署，部署的版本为：Suricata 4.0.5</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install suricata</span><br><span class="line"></span><br><span class="line">yum install wget libpcap-devel libnet-devel pcre-devel gcc-c++ automake autoconf libtool make libyaml-devel zlib-devel file-devel jansson-devel nss-devel</span><br></pre></td></tr></table></figure>
+<h3 id="ELK部署"><a href="#ELK部署" class="headerlink" title="ELK部署"></a>ELK部署</h3><p>我部署的6.2版本，去网上下载，参照着部署即可，具体过程略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-6.2.0.rpm</span><br><span class="line">logstash-6.2.0.rpm</span><br><span class="line">kibana-6.2.0-x86_64.rpm</span><br></pre></td></tr></table></figure>
+<h3 id="Suricata规则及配置："><a href="#Suricata规则及配置：" class="headerlink" title="Suricata规则及配置："></a>Suricata规则及配置：</h3><ul>
+<li><p>规则入门参考：<a href="https://www.secpulse.com/archives/71603.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/71603.html</a></p>
+</li>
+<li><p>默认规则解释参考：<a href="https://www.jianshu.com/p/d81db4c352af" target="_blank" rel="noopener">https://www.jianshu.com/p/d81db4c352af</a></p>
+</li>
+</ul>
+<p><strong>1、直接更新替换</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget  https://rules.emergingthreats.net/open/suricata-4.0/emerging.rules.tar.gz</span><br></pre></td></tr></table></figure>
+<p><strong>2、suricata规则更新可以使用suricata-update来进行更新</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install python-pip python-yaml</span><br><span class="line"></span><br><span class="line">pip install --pre --upgrade suricata-update</span><br></pre></td></tr></table></figure>
+<p>输入suricata-update 会自动进行规则更新，显示当前已经更新与启用了多少规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@test_nsm_nids suricata]# suricata-update</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Using data-directory /var/lib/suricata.</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Using Suricata configuration /etc/suricata/suricata.yaml</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Using /etc/suricata/rules for Suricata provided rules.</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Found Suricata version 4.0.5 at /usr/sbin/suricata.</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Loading /etc/suricata/suricata.yaml</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Disabling rules with proto ntp</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Disabling rules with proto modbus</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Disabling rules with proto enip</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Disabling rules with proto dnp3</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Disabling rules with proto nfs</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- No sources configured, will use Emerging Threats Open</span><br><span class="line">6/5/2019 -- 11:40:35 - &lt;Info&gt; -- Checking https://rules.emergingthreats.net/open/suricata-4.0.5/emerging.rules.tar.gz.md5.</span><br><span class="line">6/5/2019 -- 11:40:46 - &lt;Info&gt; -- Fetching https://rules.emergingthreats.net/open/suricata-4.0.5/emerging.rules.tar.gz.</span><br><span class="line"> 100% - 2352266/2352266               </span><br><span class="line">6/5/2019 -- 11:40:50 - &lt;Info&gt; -- Done.</span><br><span class="line">6/5/2019 -- 11:40:50 - &lt;Info&gt; -- Ignoring file rules/emerging-deleted.rules</span><br><span class="line">6/5/2019 -- 11:40:55 - &lt;Info&gt; -- Loaded 24532 rules.</span><br><span class="line">6/5/2019 -- 11:40:56 - &lt;Info&gt; -- Disabled 0 rules.</span><br><span class="line">6/5/2019 -- 11:40:56 - &lt;Info&gt; -- Enabled 0 rules.</span><br><span class="line">6/5/2019 -- 11:40:56 - &lt;Info&gt; -- Modified 0 rules.</span><br><span class="line">6/5/2019 -- 11:40:56 - &lt;Info&gt; -- Dropped 0 rules.</span><br><span class="line">6/5/2019 -- 11:40:56 - &lt;Info&gt; -- Enabled 38 rules for flowbit dependencies.</span><br><span class="line">6/5/2019 -- 11:40:56 - &lt;Info&gt; -- Backing up current rules.</span><br><span class="line">6/5/2019 -- 11:41:02 - &lt;Info&gt; -- Writing rules to /var/lib/suricata/rules/suricata.rules: total: 24532; enabled: 19617; added: 783; removed 8; modified: 1338</span><br><span class="line">6/5/2019 -- 11:41:03 - &lt;Info&gt; -- Testing with suricata -T.</span><br></pre></td></tr></table></figure>
+<p><strong>3、Suricata.yaml配置文件</strong></p>
+<p>网络配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">##</span><br><span class="line">## Step 1: inform Suricata about your network</span><br><span class="line">##</span><br><span class="line"></span><br><span class="line">vars:</span><br><span class="line">  # more specifc is better for alert accuracy and performance</span><br><span class="line">  address-groups:</span><br><span class="line">    #HOME_NET: &quot;[221.101.0.0/16]&quot;</span><br><span class="line">    #HOME_NET: &quot;[192.168.0.0/16]&quot;</span><br><span class="line">    #HOME_NET: &quot;[10.0.0.0/8]&quot;</span><br><span class="line">    #HOME_NET: &quot;[172.16.0.0/12]&quot;</span><br><span class="line">    HOME_NET: &quot;any&quot;</span><br><span class="line"></span><br><span class="line">    #EXTERNAL_NET: &quot;!$HOME_NET&quot;</span><br><span class="line">    EXTERNAL_NET: &quot;any&quot;</span><br><span class="line"></span><br><span class="line">    HTTP_SERVERS: &quot;$HOME_NET&quot;</span><br><span class="line">    SMTP_SERVERS: &quot;$HOME_NET&quot;</span><br><span class="line">    SQL_SERVERS: &quot;$HOME_NET&quot;</span><br><span class="line">    DNS_SERVERS: &quot;$HOME_NET&quot;</span><br><span class="line">    TELNET_SERVERS: &quot;$HOME_NET&quot;</span><br><span class="line">    AIM_SERVERS: &quot;$EXTERNAL_NET&quot;</span><br><span class="line">    DNP3_SERVER: &quot;$HOME_NET&quot;</span><br><span class="line">    DNP3_CLIENT: &quot;$HOME_NET&quot;</span><br><span class="line">    MODBUS_CLIENT: &quot;$HOME_NET&quot;</span><br><span class="line">    MODBUS_SERVER: &quot;$HOME_NET&quot;</span><br><span class="line">    ENIP_CLIENT: &quot;$HOME_NET&quot;</span><br><span class="line">    ENIP_SERVER: &quot;$HOME_NET&quot;</span><br><span class="line"></span><br><span class="line">  port-groups:</span><br><span class="line">    HTTP_PORTS: &quot;80,8081,8080,443&quot;</span><br><span class="line">    SHELLCODE_PORTS: &quot;!80&quot;</span><br><span class="line">    ORACLE_PORTS: 1521</span><br><span class="line">    SSH_PORTS: &quot;22,37222&quot;</span><br><span class="line">    DNP3_PORTS: 20000</span><br><span class="line">    MODBUS_PORTS: 502</span><br><span class="line">    FILE_DATA_PORTS: &quot;[$HTTP_PORTS,110,143]&quot;</span><br><span class="line">    FTP_PORTS: 21</span><br></pre></td></tr></table></figure>
+<p>选择加载的规则：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">##</span><br><span class="line">## Step 2: select the rules to enable or disable</span><br><span class="line">##</span><br><span class="line"></span><br><span class="line">default-rule-path: /etc/suricata/rules</span><br><span class="line">rule-files:</span><br><span class="line"># - botcc.rules</span><br><span class="line"> - emerging-dos.rules</span><br><span class="line"> - emerging-exploit.rules</span><br><span class="line"> - emerging-ftp.rules</span><br><span class="line"> - emerging-activex.rules</span><br><span class="line"> - emerging-attack_response.rules</span><br><span class="line"> - emerging-imap.rules</span><br><span class="line"> - emerging-info.rules</span><br><span class="line"> - emerging-malware.rules</span><br><span class="line"> - emerging-misc.rules</span><br><span class="line"> - emerging-netbios.rules</span><br><span class="line"> - emerging-pop3.rules</span><br><span class="line"> - emerging-rpc.rules</span><br><span class="line"> - emerging-scan.rules</span><br><span class="line"> - emerging-shellcode.rules</span><br><span class="line"> - emerging-smtp.rules</span><br><span class="line"> - emerging-snmp.rules</span><br><span class="line"> - emerging-sql.rules</span><br><span class="line"> - emerging-telnet.rules</span><br><span class="line"> - emerging-tftp.rules</span><br><span class="line"> - emerging-user_agents.rules</span><br><span class="line"> - emerging-web_client.rules</span><br><span class="line"> - emerging-web_server.rules</span><br><span class="line"> - emerging-web_specific_apps.rules</span><br><span class="line"> - emerging-worm.rules</span><br><span class="line"> - tor.rules</span><br><span class="line"># - emerging-icmp_info.rules</span><br><span class="line"> - emerging-icmp.rules</span><br><span class="line">#  botcc.portgrouped.rules</span><br><span class="line"> - ciarmy.rules</span><br><span class="line"> - compromised.rules</span><br><span class="line"># - drop.rules</span><br><span class="line"># - dshield.rules</span><br><span class="line"># - emerging-chat.rules</span><br><span class="line"># - emerging-current_events.rules</span><br><span class="line"># - emerging-dns.rules</span><br><span class="line"># - emerging-games.rules</span><br><span class="line"># - emerging-inappropriate.rules</span><br><span class="line"># - emerging-mobile_malware.rules</span><br><span class="line"># - emerging-p2p.rules</span><br><span class="line"># - emerging-policy.rules</span><br><span class="line"># - emerging-scada.rules</span><br><span class="line"># - emerging-scada_special.rules</span><br><span class="line"> - emerging-trojan.rules</span><br><span class="line"># - emerging-voip.rules</span><br><span class="line"></span><br><span class="line"># - decoder-events.rules # available in suricata sources under rules dir</span><br><span class="line"># - stream-events.rules  # available in suricata sources under rules dir</span><br><span class="line"># - http-events.rules    # available in suricata sources under rules dir</span><br><span class="line"># - smtp-events.rules    # available in suricata sources under rules dir</span><br><span class="line"># - dns-events.rules     # available in suricata sources under rules dir</span><br><span class="line"># - tls-events.rules     # available in suricata sources under rules dir</span><br><span class="line"># - modbus-events.rules  # available in suricata sources under rules dir</span><br><span class="line"># - app-layer-events.rules  # available in suricata sources under rules dir</span><br><span class="line"># - dnp3-events.rules       # available in suricata sources under rules dir</span><br><span class="line"># - ntp-events.rules       # available in suricata sources under rules dir</span><br></pre></td></tr></table></figure></p>
+<p>输出检测日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">##</span><br><span class="line">## Step 3: select outputs to enable</span><br><span class="line">##</span><br><span class="line"></span><br><span class="line">outputs:</span><br><span class="line">  - eve-log:</span><br><span class="line">    enabled: yes</span><br><span class="line">    filetype: regular #regular|syslog|unix_dgram|unix_stream|redis</span><br><span class="line">    filename: eve.json</span><br><span class="line">    types:</span><br><span class="line">      - alert:</span><br><span class="line">        metadata: yes</span><br><span class="line">        tagged-packets: yes</span><br><span class="line">        xff:</span><br><span class="line">          enabled: yes</span><br><span class="line">          mode: extra-data</span><br><span class="line">      - http:</span><br><span class="line">        extended: yes</span><br><span class="line">      - dns:</span><br><span class="line">        query: yes     # enable logging of DNS queries</span><br><span class="line">        answer: yes    # enable logging of DNS answers</span><br><span class="line">      - tls:</span><br><span class="line">        extended: yes     # enable this for extended logging information</span><br><span class="line">      - files:</span><br><span class="line">        force-magic: no   # force logging magic on all logged files</span><br><span class="line">      - smtp:</span><br><span class="line">        extended: yes # enable this for extended logging information</span><br><span class="line">      - ssh</span><br><span class="line">      - flow</span><br></pre></td></tr></table></figure>
+<p>参考:<a href="https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Suricatayaml" target="_blank" rel="noopener">https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Suricatayaml</a></p>
+<h3 id="logstash配置"><a href="#logstash配置" class="headerlink" title="logstash配置"></a>logstash配置</h3><p>suricata_logstash.conf,将suricata入侵检测数据采集到es中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">file &#123;</span><br><span class="line">    path =&gt; [&quot;/var/log/suricata/eve.json*&quot;]</span><br><span class="line">    codec =&gt;  &quot;json&quot;</span><br><span class="line">    type =&gt; &quot;SuricataIDS&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">filter &#123;</span><br><span class="line">if [type] == &quot;SuricataIDS&quot; &#123;</span><br><span class="line">    date &#123;</span><br><span class="line">    match =&gt; [ &quot;timestamp&quot;, &quot;ISO8601&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line">    ruby &#123;</span><br><span class="line">    code =&gt; &quot;</span><br><span class="line">        if event.get(&apos;[event_type]&apos;) == &apos;fileinfo&apos;</span><br><span class="line">        event.set(&apos;[fileinfo][type]&apos;, event.get(&apos;[fileinfo][magic]&apos;).to_s.split(&apos;,&apos;)[0])</span><br><span class="line">        end</span><br><span class="line">    &quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ruby&#123;</span><br><span class="line">    code =&gt; &quot;</span><br><span class="line">        if event.get(&apos;[event_type]&apos;) == &apos;alert&apos;</span><br><span class="line">        sp = event.get(&apos;[alert][signature]&apos;).to_s.split(&apos; group &apos;)</span><br><span class="line">        if (sp.length == 2) and /\A\d+\z/.match(sp[1])</span><br><span class="line">            event.set(&apos;[alert][signature]&apos;, sp[0])</span><br><span class="line">        end</span><br><span class="line">        end</span><br><span class="line">        &quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if [src_ip]  &#123;</span><br><span class="line">    geoip &#123;</span><br><span class="line">    source =&gt; &quot;src_ip&quot;</span><br><span class="line">    target =&gt; &quot;geoip&quot;</span><br><span class="line">    #database =&gt; &quot;/etc/logstash/conf.d/GeoLiteCity.dat&quot;</span><br><span class="line">    add_field =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;%&#123;[geoip][longitude]&#125;&quot; ]</span><br><span class="line">    add_field =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;%&#123;[geoip][latitude]&#125;&quot;  ]</span><br><span class="line">    &#125;</span><br><span class="line">    mutate &#123;</span><br><span class="line">    convert =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;float&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line">    if ![geoip.ip] &#123;</span><br><span class="line">    if [dest_ip]  &#123;</span><br><span class="line">        geoip &#123;</span><br><span class="line">        source =&gt; &quot;dest_ip&quot;</span><br><span class="line">        target =&gt; &quot;geoip&quot;</span><br><span class="line">        #database =&gt; &quot;/etc/logstash/conf.d/GeoLiteCity.dat&quot;</span><br><span class="line">        add_field =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;%&#123;[geoip][longitude]&#125;&quot; ]</span><br><span class="line">        add_field =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;%&#123;[geoip][latitude]&#125;&quot;  ]</span><br><span class="line">        &#125;</span><br><span class="line">        mutate &#123;</span><br><span class="line">        convert =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;float&quot; ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line">    #stdout &#123; codec =&gt; rubydebug &#125;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        hosts =&gt;&quot;elastic.*****.com:35608&quot;</span><br><span class="line">        index =&gt; &quot;suricata_log%&#123;+YYYY.MM&#125;&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="0x05-数据分析"><a href="#0x05-数据分析" class="headerlink" title="0x05 数据分析"></a>0x05 数据分析</h1><h5 id="1）suricata数据"><a href="#1）suricata数据" class="headerlink" title="1）suricata数据"></a>1）suricata数据</h5><p>创建Kibana看板，进行数据分析最为简易，可以下载Kibana看板所需的json文件，并添加到Kibana中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://aka.ms/networkwatchersuricatadashboard</span><br><span class="line">https://aka.ms/networkwatchersuricatavisualization</span><br><span class="line">https://aka.ms/networkwatchersuricatasavedsearch</span><br></pre></td></tr></table></figure>
+<p>启动suricata进行网络入侵检测后，生成eve.json文件，使用ELK组件处理该文件，并在Kibana上展示告警，具体界面如下：</p>
+<p><img src="https://i.loli.net/2019/06/22/5d0db00b2bf0936403.png" alt="image"></p>
+<h5 id="2）综合联动分析"><a href="#2）综合联动分析" class="headerlink" title="2）综合联动分析"></a>2）综合联动分析</h5><p>这里的综合联动分析，就是吧目前有点数据关联起来，比如hids、waf（基于elk）、cmdb等</p>
+<p>例如：</p>
+<p>情景1、suricata检测到有大量扫描爆破行为，我把该事件的源IP跟cmdb数据进行关联，如果匹配上了，那么很有可能是内部机器沦陷发起了进一步的扫描攻击，事件紧急程度高，得赶紧响应！</p>
+<p><img src="https://i.loli.net/2019/06/22/5d0dadb565ff311403.png" alt="image"></p>
+<p>情景2、suricata检测到大量针对系统层面的攻击行为，关连hids日志，若有一定的匹配，那么攻击成功的可能性比较高，需要引起安全的高度关注。</p>
+<p>……</p>
+<p>我这里提到的关联分析也是比较简单粗暴，主要目的是为了减少单一告警的误报率，关联分析过后，准确率会有一定提升（没数据支撑，说个卵）</p>
+<p>经过分析之后，可以将攻击ip推送给硬件防火墙进行封禁，没过墙的业务推给服务器iptables封禁。</p>
+<h1 id="0x06-面临的困境（坑点）"><a href="#0x06-面临的困境（坑点）" class="headerlink" title="0x06 面临的困境（坑点）"></a>0x06 面临的困境（坑点）</h1><ul>
+<li>Suricata规则基本依托于社区能力，没有人力来进行规则维护</li>
+<li>机房出口流量较大，多地多机房，流量镜像过来，Suricata检测引擎的性能会成为瓶颈(服务器成本不小)</li>
+<li>镜像过来的流量，可能有掉包，目前还咩想到啥好的方案</li>
+<li>告警一大堆，根本没人看（得过来）</li>
+<li>这玩意儿，搞着搞着可能就成了半成品</li>
+<li>总之，有总比没有好，至少敢根老板说，我们安全是有感知的了，呵呵</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/30/几个高精度IP定位网站/" rel="next" title="几个高精度IP定位网站">
+                <i class="fa fa-chevron-left"></i> 几个高精度IP定位网站
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://www.maliciouskr.cc/favicon.ico"
+                alt="MaliciousKr" />
+            
+              <p class="site-author-name" itemprop="name">MaliciousKr</p>
+              <p class="site-description motion-element" itemprop="description">面有萌色，胸有丘壑</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-Suricata简介"><span class="nav-number">2.</span> <span class="nav-text">0x01 Suricata简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-选择Suricata的原因"><span class="nav-number">3.</span> <span class="nav-text">0x02 选择Suricata的原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-DIY-Suricata"><span class="nav-number">4.</span> <span class="nav-text">0x03 DIY Suricata</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-部署"><span class="nav-number">5.</span> <span class="nav-text">0x04 部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Suricata部署："><span class="nav-number">5.0.1.</span> <span class="nav-text">Suricata部署：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELK部署"><span class="nav-number">5.0.2.</span> <span class="nav-text">ELK部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Suricata规则及配置："><span class="nav-number">5.0.3.</span> <span class="nav-text">Suricata规则及配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logstash配置"><span class="nav-number">5.0.4.</span> <span class="nav-text">logstash配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05-数据分析"><span class="nav-number">6.</span> <span class="nav-text">0x05 数据分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）suricata数据"><span class="nav-number">6.0.0.0.1.</span> <span class="nav-text">1）suricata数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）综合联动分析"><span class="nav-number">6.0.0.0.2.</span> <span class="nav-text">2）综合联动分析</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x06-面临的困境（坑点）"><span class="nav-number">7.</span> <span class="nav-text">0x06 面临的困境（坑点）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MaliciousKr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
