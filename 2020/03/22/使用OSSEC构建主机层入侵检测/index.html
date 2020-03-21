@@ -82,8 +82,8 @@
 <meta name="description" content="0xFFFF FFFFreload一篇之前（2018年）写的文档，并更新了部分内容，记录下以前都写了些什么辣鸡。 0x00 前言FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。 这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。 @aya">
 <meta name="keywords" content="安全，信息安全，运维安全，代码审计，渗透测试">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MaliciousKr.Cc">
-<meta property="og:url" content="https://maliciouskr.cc/2020/03/21/使用OSSEC构建主机层入侵检测/index.html">
+<meta property="og:title" content="使用OSSEC构建主机层入侵检测">
+<meta property="og:url" content="https://maliciouskr.cc/2020/03/22/使用OSSEC构建主机层入侵检测/index.html">
 <meta property="og:site_name" content="MaliciousKr.Cc">
 <meta property="og:description" content="0xFFFF FFFFreload一篇之前（2018年）写的文档，并更新了部分内容，记录下以前都写了些什么辣鸡。 0x00 前言FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。 这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。 @aya">
 <meta property="og:locale" content="default">
@@ -107,9 +107,9 @@
 <meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8Ri1ot.md.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/03/19/8DRzIs.md.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8f9nLd.md.png">
-<meta property="og:updated_time" content="2020-03-21T08:08:05.000Z">
+<meta property="og:updated_time" content="2020-03-21T08:21:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MaliciousKr.Cc">
+<meta name="twitter:title" content="使用OSSEC构建主机层入侵检测">
 <meta name="twitter:description" content="0xFFFF FFFFreload一篇之前（2018年）写的文档，并更新了部分内容，记录下以前都写了些什么辣鸡。 0x00 前言FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。 这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。 @aya">
 <meta name="twitter:image" content="https://s1.ax1x.com/2020/03/20/82LBIH.md.png">
 
@@ -141,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="https://maliciouskr.cc/2020/03/21/使用OSSEC构建主机层入侵检测/"/>
+  <link rel="canonical" href="https://maliciouskr.cc/2020/03/22/使用OSSEC构建主机层入侵检测/"/>
 
 
 
 
 
-  <title> | MaliciousKr.Cc</title>
+  <title>使用OSSEC构建主机层入侵检测 | MaliciousKr.Cc</title>
   
 
 
@@ -318,7 +318,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://maliciouskr.cc/2020/03/21/使用OSSEC构建主机层入侵检测/">
+    <link itemprop="mainEntityOfPage" href="https://maliciouskr.cc/2020/03/22/使用OSSEC构建主机层入侵检测/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="MaliciousKr">
@@ -335,7 +335,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">使用OSSEC构建主机层入侵检测</h1>
         
 
         <div class="post-meta">
@@ -347,8 +347,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-21T16:08:05+08:00">
-                2020-03-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-22T12:08:23+08:00">
+                2020-03-22
               </time>
             
 
