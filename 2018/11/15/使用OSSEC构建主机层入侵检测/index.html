@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0xFFFF FFFFreload一篇文档，并更新了部分内容。 0x00 前言FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。 这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。 @ayazero有篇文章里面有一段大概是这样说的：你特么就">
+<meta name="keywords" content="安全，信息安全，运维安全，代码审计，渗透测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用OSSEC构建主机层入侵检测">
+<meta property="og:url" content="https://maliciouskr.cc/2018/11/15/使用OSSEC构建主机层入侵检测/index.html">
+<meta property="og:site_name" content="MaliciousKr.Cc">
+<meta property="og:description" content="0xFFFF FFFFreload一篇文档，并更新了部分内容。 0x00 前言FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。 这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。 @ayazero有篇文章里面有一段大概是这样说的：你特么就">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/20/82LBIH.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DUK2R.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DJP0g.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DdQHK.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8Dd78J.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DDdzQ.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8W8NH1.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8W8WUP.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8W17Rg.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8D2HuF.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/20/82jsJJ.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/20/82vGTO.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/20/82vs78.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8WGlVI.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/20/82xeDP.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/19/8DRbxf.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8WzvkV.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8Ri1ot.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/19/8DRzIs.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8f9nLd.md.png">
+<meta property="og:updated_time" content="2021-11-30T14:17:40.484Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用OSSEC构建主机层入侵检测">
+<meta name="twitter:description" content="0xFFFF FFFFreload一篇文档，并更新了部分内容。 0x00 前言FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。 这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。 @ayazero有篇文章里面有一段大概是这样说的：你特么就">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/20/82LBIH.md.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://maliciouskr.cc/2018/11/15/使用OSSEC构建主机层入侵检测/"/>
+
+
+
+
+
+  <title>使用OSSEC构建主机层入侵检测 | MaliciousKr.Cc</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a03f7a41a75a1b30590ab90cb4952873";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">MaliciousKr.Cc</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://maliciouskr.cc/2018/11/15/使用OSSEC构建主机层入侵检测/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MaliciousKr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://www.maliciouskr.cc/favicon.ico">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MaliciousKr.Cc">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用OSSEC构建主机层入侵检测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-15T12:08:23+08:00">
+                2018-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="0xFFFF-FFFF"><a href="#0xFFFF-FFFF" class="headerlink" title="0xFFFF FFFF"></a>0xFFFF FFFF</h1><p>reload一篇文档，并更新了部分内容。</p>
+<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>FW、WAF、NIDS、HIDS都是企业构建自己的安全防御体系的基础，整合的好就成了ATA(Advanced Threat Analytics高级威胁分析)。</p>
+<p>这篇文章记录了前段时间在公司搞基础安全建过程中，基于ossec搞hids的一些记录和总结，供大家参考。</p>
+<p>@ayazero有篇<a href="https://mp.weixin.qq.com/s/icRTSbxjT-1Jf216u6F_pg" target="_blank" rel="noopener">文章</a>里面有一段大概是这样说的：你特么就只会玩玩ossec？对不起，这只是个数千规模量级的解决方案，无论是架构，还是检测深度乃至场景覆盖率都无法解决更大规模下的问题。</p>
+<p>所以，这里的主要适用范围是在中小型互联网企业，尤其是安全人员较少，然后又不怎么重视安全（不愿意花钱）的那种，土豪公司可以直接忽略。</p>
+<h1 id="0x01-OSSEC相关介绍"><a href="#0x01-OSSEC相关介绍" class="headerlink" title="0x01 OSSEC相关介绍"></a>0x01 OSSEC相关介绍</h1><p>OSSEC是一款开源的基于主机的入侵检测系统。它具备日志分析，文件完整性检查，策略监控，rootkit检测，实时报警以及联动响应等功能。它支持多种操作系统：Linux、Windows、MacOS、Solaris、HP-UX、AIX。</p>
+<p><img src="https://s1.ax1x.com/2020/03/20/82LBIH.md.png" alt="image"></p>
+<h1 id="0x02-选择OSSEC的原因"><a href="#0x02-选择OSSEC的原因" class="headerlink" title="0x02 选择OSSEC的原因"></a>0x02 选择OSSEC的原因</h1><p>主机安全监控之前已经开始在做，大佬走了我来接盘。要搞hids，首先想到的是ossec，同时也去调研了一下相关的开源产品。</p>
+<table>
+<thead>
+<tr>
+<th>开源产品</th>
+<th>简介</th>
+<th>项目地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ossec</td>
+<td>在众多互联网企业中广泛运用</td>
+<td><a href="https://www.ossec.net/" target="_blank" rel="noopener">https://www.ossec.net/</a></td>
+</tr>
+<tr>
+<td>wazuh</td>
+<td>基于ossec扩展出来的，结合了Elastic Stack</td>
+<td><a href="https://wazuh.com/" target="_blank" rel="noopener">https://wazuh.com/</a></td>
+</tr>
+<tr>
+<td>osquery</td>
+<td>facebook开源的osquery，通过集成osquery来实现快速监控系统安全</td>
+<td><a href="https://osquery.io/" target="_blank" rel="noopener">https://osquery.io/</a></td>
+</tr>
+<tr>
+<td>yulong-hids</td>
+<td>同程安全团队开源的HIDS</td>
+<td><a href="https://github.com/ysrc/yulong-hids" target="_blank" rel="noopener">https://github.com/ysrc/yulong-hids</a></td>
+</tr>
+<tr>
+<td>AgentSmith HIDS</td>
+<td>点融安全团队开源的HIDS</td>
+<td><a href="https://github.com/DianrongSecurity/AgentSmith-HIDS" target="_blank" rel="noopener">https://github.com/DianrongSecurity/AgentSmith-HIDS</a></td>
+</tr>
+</tbody>
+</table>
+<p>考虑到ossec稳定性稳定性稳定性、案例资料也较多、容易上手，而且前期已经在边缘业务部署测试，所以继续选择ossec。yulong、AgentSmith也相当不错，但刚准备搞hids的时候它还没开源出来呐。</p>
+<p>在正式动工之前，就想着有很多坑需要填，这里列举了一些，这是一个小白的绝望：</p>
+<ul>
+<li><p>[x] 大规模的机器，如何初始化部署ossec的？</p>
+</li>
+<li><p>[x] 大规模的agent如何管理？如何管理、下发规则？</p>
+</li>
+<li><p>[x] 集群化的部署，如何统一管理？</p>
+</li>
+<li><p>[x] 海量日志怎样存储，怎样做数据分析？上来这么多报警，如何提取有效信息？如何闭环？</p>
+</li>
+<li><p>[x] 如何做一些关键的安全监控策略：基线扫描、webshell扫描、反弹shell监控等？</p>
+</li>
+<li><p>[x] 文件系统复杂、业务量大，性能瓶颈该如何解决？</p>
+</li>
+</ul>
+<h1 id="0x03-HIDS架构构思"><a href="#0x03-HIDS架构构思" class="headerlink" title="0x03 HIDS架构构思"></a>0x03 HIDS架构构思</h1><p>对于企业来说，主机数量多，机房遍布各地，业务环境不同，日志量较大较分散，如果只是简单的部署ossec估计也没多大意义。所以在初期就在思考借助这个检测框架，我们可以实现那些功能和检测能力。</p>
+<h4 id="HIDS核心功能："><a href="#HIDS核心功能：" class="headerlink" title="HIDS核心功能："></a>HIDS核心功能：</h4><p><img src="https://s1.ax1x.com/2020/03/18/8DUK2R.md.png" alt="image"></p>
+<h4 id="HIDS数据处理流程："><a href="#HIDS数据处理流程：" class="headerlink" title="HIDS数据处理流程："></a>HIDS数据处理流程：</h4><p><img src="https://s1.ax1x.com/2020/03/18/8DJP0g.md.png" alt="image"></p>
+<p><strong>ossec-agent</strong> ：用于收集服务器信息、计划任务、监听端口、服务、系统日志、用户列表，实时监控文件操作行为、网络连接，系统安全配置核查（基线扫描）、webshell扫描、反弹shell监控等，初步筛选整理后传输到Server节点。</p>
+<p><strong>ossec-server</strong>：集群化部署，用于解析用户定义的规则，对从各Agent接收到的信息和行为进行分析检测和保存，对文件变化、异常登录、异常网络连接行为等进行分析并告警，从而实现对入侵行为实时预警。</p>
+<p><strong>Elasticsearch</strong>：日至存储、聚合、分析</p>
+<p><strong>Mysql</strong>：存储配置信息、cmdb资产信息、告警信息、监控组信息</p>
+<p><strong>Redis</strong>：任务队列、告警队列、消息推送队列</p>
+<p><strong>Web后台</strong>，搜集展示来至es的日志，提供给安全人员或运维人员；包括监控日志、告警消息查询，数据统计、监控组管理、主机管理、告警过滤、规则查看、配置下发等功能。</p>
+<h1 id="0x04-实践并优化"><a href="#0x04-实践并优化" class="headerlink" title="0x04 实践并优化"></a>0x04 实践并优化</h1><p>我们把HIDS数据流抽象为采集层、入侵检测层、存储层、分析决策层，架构解析如下：</p>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DdQHK.md.png" alt="image"></p>
+<p>同时也列出了我们需要解决的核心问题：</p>
+<ul>
+<li><p>Agent部署步骤繁琐，大规模部署存在难点</p>
+</li>
+<li><p>Agent管理问题</p>
+</li>
+<li><p>默认入侵检测能力有限</p>
+</li>
+<li><p>告警多，入侵事件误判多</p>
+</li>
+<li><p>事件处置流程欠佳</p>
+</li>
+</ul>
+<h3 id="1-部署优化，提升覆盖率"><a href="#1-部署优化，提升覆盖率" class="headerlink" title="1.部署优化，提升覆盖率"></a>1.部署优化，提升覆盖率</h3><p><img src="https://s1.ax1x.com/2020/03/18/8Dd78J.md.png" alt="image"></p>
+<p><strong>优化前：</strong></p>
+<ul>
+<li><p>默认只支持源码安装、安装步骤繁琐、编译安装还容易出错</p>
+</li>
+<li><p>agent与server端签名认证匹配过程繁琐</p>
+</li>
+<li><p>需要人工介入部署，工作量特别大</p>
+</li>
+</ul>
+<p><strong>优化后：</strong></p>
+<ul>
+<li><p>我把源码包定制化修改之后，打成rpm包，yum源方式部署；支持centos6.<em>，centos7.</em>系列</p>
+</li>
+<li><p>定制化编写部署脚本及部署流程，减轻了部署工作带来的压力</p>
+</li>
+<li>多区域的主机，server多区域分布式部署，最终数据汇总到一处即可</li>
+</ul>
+<p>需要注意：每一台ossec-server默认支持256个agent，最大支持2048个agent。要想支持2048个agent，需要在安装之前设置一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ossec-server ~]# cd ossec-hids/src/</span><br><span class="line">[root@ossec-server src]# make setmaxagents</span><br><span class="line">Specify maximum number of agents: 2048</span><br><span class="line">Maximum number of agents set to 2048.</span><br><span class="line">[root@ossec-server src]# cd ..</span><br><span class="line">[root@ossec-server ossec-hids]# ./install.sh</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>2.8版本的ossec，比较麻烦的是批量添加agent，因为其通信认证特别麻烦。需要想办法批量生产agent的key文件，然后交换给agent。当时我们借助了已有的ops平台，写了一些脚本，自动化的完成了以上的认证过程。</p>
+<p>可以参考drops:<a href="http://wooyun.jozxing.cc/static/drops/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8-9424.html" target="_blank" rel="noopener">OSSEC服务端配置客户端批量部署方案</a>，然后根据自己情况调整。</p>
+<p>较新版本（比如v3.2.0）完美解决了以上问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、IPv6支持，满足未来业务IPv6需求</span><br><span class="line">2、ossec-authd认证机制更加完善，安全系数提高，解决当前部署流程复杂易出错的问题</span><br><span class="line">3、Configuration options更加完善，可以配置更灵活的监控项</span><br><span class="line">4、更新检测规则/解码器</span><br><span class="line">5、修复若干bug</span><br></pre></td></tr></table></figure>
+<p>添加agent可能有两种情况：</p>
+<ul>
+<li>已经线上运行的服务器（手动部署或批量部署）</li>
+</ul>
+<p>运维人员到运维平台，选择指定机器执行部署模版命令即可完成部署,部署成功率&gt;90%</p>
+<ul>
+<li>新上线的服务器</li>
+</ul>
+<p>自动装机，执行系统初始化脚本时，针对平台业务路径的主机，自动部署安全监控agent,部署成功率&gt;95%</p>
+<h3 id="2-主机及规则管理优化"><a href="#2-主机及规则管理优化" class="headerlink" title="2.主机及规则管理优化"></a>2.主机及规则管理优化</h3><p><img src="https://s1.ax1x.com/2020/03/18/8DDdzQ.md.png" alt="image"></p>
+<p><strong>优化前：</strong></p>
+<ul>
+<li>Agent仅有ip信息，这ip是属于什么业务、谁负责，告警出来应该找谁去处理</li>
+<li>怎样去查看agent状态？只能通过上server机器通过命令去查看</li>
+<li>怎样去管理他的入侵检测规则？不知道目前有哪些规在跑？</li>
+</ul>
+<p><strong>优化后：</strong></p>
+<ul>
+<li>针对这样的问题，我们拉取了cmdb数据，同步CMDB关联业务信息，将这些分散的信息关联起来，成为一个完成的信息链条</li>
+<li>联动CMDB，安全agent监控覆盖到所有业务，滴水不漏</li>
+<li>在ossec server机器编写了相应的查询接口，自动化的去同步各个server下的agent信息</li>
+<li>编写一整套接口并结合active-response机制去更新agent端的规则（后期换成了其它方式，被动更新规则）</li>
+</ul>
+<p><strong>效果：</strong></p>
+<ul>
+<li>监控组管理</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/03/21/8W8NH1.md.png" alt="image"></p>
+<ul>
+<li>主机管理</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/03/21/8W8WUP.md.png" alt="image"></p>
+<ul>
+<li>规则管理</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/03/21/8W17Rg.md.png" alt="image"></p>
+<h3 id="3-丰富检测能力，提升安全事件感知效率"><a href="#3-丰富检测能力，提升安全事件感知效率" class="headerlink" title="3.丰富检测能力，提升安全事件感知效率"></a>3.丰富检测能力，提升安全事件感知效率</h3><p><img src="https://s1.ax1x.com/2020/03/18/8D2HuF.md.png" alt="image"></p>
+<p>ossec默认拥有日志分析，文件完整性检查，rootkit检测，这些默认的规则，覆盖得比较多、比较泛，没有针对性；比如，我监控敏感文件变化，它检测出来的告警只会告诉你文件发生了变化，文件路径是什么什么；</p>
+<p>对此我针对性的优化、把一些关键的文件、配置监控单独做成一条规则，</p>
+<ul>
+<li>比如说监控到定时任务变化了，单独告警说定时任务变化了、监控到iptables改变单独提示告警、监控到iptables关闭了，就会产生对应的告警。</li>
+<li>不同告警可以设置不同的level，以区别重要程度。</li>
+</ul>
+<p>另一方面，改写了agent，加入一些自定义的检测脚本，用ossec检测框架去定时脚本执行，反馈结果到我的server端并进行分析。</p>
+<ul>
+<li><p>系统安全配置核查，比如说ssh配置，是否修改了默认的22端口，是否启用了ssh key认证，是否禁用了密码登录、redis是否未设置密码、php.ini文件是否配置合理等。</p>
+</li>
+<li><p>另外一项就是针对webshell的监控</p>
+</li>
+<li><p>反弹shell检查等</p>
+</li>
+</ul>
+<p>如下，是ossec目录结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">/ossec/</span><br><span class="line">├── active-response #主动响应脚本</span><br><span class="line">├── agentless</span><br><span class="line">├── bin 	      #二进制文件，主程序logcollector、syscheck等</span><br><span class="line">│   ├── agent-auth</span><br><span class="line">│   ├── manage_agents</span><br><span class="line">│   ├── ossec-agentd  #agent守护进程</span><br><span class="line">│   ├── ossec-control #agent操作入口</span><br><span class="line">│   ├── ossec-execd   #agent主动响应进程，用于执行server端预定的操作</span><br><span class="line">│   ├── ossec-logcollector #agent日志搜集进程</span><br><span class="line">│   ├── ossec-lua</span><br><span class="line">│   ├── ossec-luac</span><br><span class="line">│   ├── ossec-syscheckd  #agent文件监控进程</span><br><span class="line">│   └── util.sh</span><br><span class="line">├── etc   			#配置文件</span><br><span class="line">│   ├── client.keys #通信密钥</span><br><span class="line">│   ├── ossec.conf  </span><br><span class="line">│   ├── ossec-init.conf</span><br><span class="line">│   ├── ossec_monitor ＃配合ops的性能监控</span><br><span class="line">│   └── shared </span><br><span class="line">├── logs  			#日志文件</span><br><span class="line">│   ├── active-responses.log</span><br><span class="line">│   └── ossec.log</span><br><span class="line">├── queue  　	 	＃监控任务队列</span><br><span class="line">│   ├── alerts</span><br><span class="line">│   ├── diff</span><br><span class="line">│   ├── ossec</span><br><span class="line">│   ├── rids</span><br><span class="line">│   └── syscheck</span><br><span class="line">├── shell    		#自定义的安全检测脚本</span><br><span class="line">│   ├── systemCheck.sh  #系统基线扫描</span><br><span class="line">│   ├── webshellScan.py  #websehll扫描</span><br><span class="line">│   ├── ReverseshellScan.py #反弹shell监控</span><br><span class="line">│   ├──......</span><br><span class="line">├── tmp</span><br><span class="line">└── var</span><br></pre></td></tr></table></figure>
+<p>例如，自定义安全检查脚本‘systemCheck.sh’,用于检查系统安全基线配置情况:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">check_ssh()&#123;</span><br><span class="line"></span><br><span class="line">	ssh_config_path=&apos;/etc/ssh/sshd_config&apos;</span><br><span class="line"></span><br><span class="line">	result=`cat $ssh_config_path | grep &apos;^PasswordAuthentication *yes&apos;`</span><br><span class="line"></span><br><span class="line">	if [ -n &quot;$result&quot; ];then</span><br><span class="line"></span><br><span class="line">		echo &apos;Notice: ssh can login with password&apos;</span><br><span class="line">		</span><br><span class="line">	fi</span><br><span class="line"></span><br><span class="line">	result=`cat $ssh_config_path | grep &apos;^Port *2222$&apos;`</span><br><span class="line"></span><br><span class="line">	if [ ! -n &quot;$result&quot; ];then</span><br><span class="line"></span><br><span class="line">		echo &apos;Notice: ssh listen  port not 2222&apos;</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	result=`cat $ssh_config_path | grep &apos;^PermitEmptyPasswords *yes&apos;`</span><br><span class="line"></span><br><span class="line">	if [  -n &quot;$result&quot; ];then</span><br><span class="line"></span><br><span class="line">		echo &apos;Notice: ssh allow login with empty password&apos;</span><br><span class="line">	fi</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">check_system()&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	result=`awk -F: &apos;($3 == &quot;0&quot;) &#123; print $1 &#125;&apos; /etc/passwd | grep &apos;[^root]&apos; `</span><br><span class="line"></span><br><span class="line">	if [ -n &quot;$result&quot; ];then</span><br><span class="line"></span><br><span class="line">		echo &apos;Notice:Other root account:&apos;$result</span><br><span class="line"></span><br><span class="line">	fi</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	result=`awk -F: &apos;($2 == &quot;&quot;) &#123; print $1 &#125;&apos; /etc/shadow | grep [a-zA-Z]`</span><br><span class="line"></span><br><span class="line">	if [ -n &quot;$result&quot; ];then</span><br><span class="line"></span><br><span class="line">		echo &apos;Notice: account has empty passwd&apos;$result</span><br><span class="line"></span><br><span class="line">	fi</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">check_ssh</span><br><span class="line">check_system</span><br></pre></td></tr></table></figure>
+<p>ossec 配置文件中添加如下内容，每隔10小时进行一次扫描：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;localfile&gt;</span><br><span class="line">  &lt;log_format&gt;command&lt;/log_format&gt;</span><br><span class="line">  &lt;command&gt;/bin/bash /var/ossec/shell/systemCheck.sh&lt;/command&gt;</span><br><span class="line">  &lt;frequency&gt;36000&lt;/frequency&gt;</span><br><span class="line">&lt;/localfile&gt;</span><br><span class="line">&lt;localfile&gt;</span><br><span class="line">  &lt;log_format&gt;command&lt;/log_format&gt;</span><br><span class="line">  &lt;command&gt;python /var/ossec/shell/webshellScan.py&lt;/command&gt;</span><br><span class="line">  &lt;frequency&gt;36000&lt;/frequency&gt;</span><br><span class="line">&lt;/localfile&gt;</span><br></pre></td></tr></table></figure>
+<p>类似的，监控系统iptables变化、authorized_keys变化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;localfile&gt;</span><br><span class="line">  &lt;log_format&gt;command&lt;/log_format&gt;</span><br><span class="line">  &lt;command&gt;iptables -L -n|md5sum|awk &apos;&#123;print $1&#125;&apos;&lt;/command&gt;</span><br><span class="line">&lt;/localfile&gt;</span><br><span class="line"></span><br><span class="line">&lt;localfile&gt;                                                       </span><br><span class="line"></span><br><span class="line">&lt;localfile&gt;                </span><br><span class="line">  &lt;log_format&gt;command&lt;/log_format&gt;                            </span><br><span class="line">  &lt;command&gt;cat /root/.ssh/authorized_keys|md5sum|awk &apos;&#123;print $1&#125;&apos;&lt;/command&gt;</span><br><span class="line">&lt;/localfile&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>这里特别说下针对webshell扫描的优化：</strong></p>
+<p>webshell的监控，这里我只是做了简单的文件静态特征检测，手段还有很多需要拔高的地方。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1.扫描性能优化</span><br><span class="line"></span><br><span class="line">2.webshell规则库优化</span><br><span class="line"></span><br><span class="line">@过程中参考了以下文章，具有一定的借鉴意义：</span><br><span class="line"></span><br><span class="line">https://mp.weixin.qq.com/s/oZ7Jmo_rIblGYArHecn7lQ</span><br><span class="line">https://mp.weixin.qq.com/s/3Zx2FTXXxpTiqe56b8hJQg</span><br><span class="line">https://mp.weixin.qq.com/s/8PauKA6KU3TXp2FEmcoqeQ</span><br><span class="line">https://mp.weixin.qq.com/s/yh_uX8jPfbn-_wzGOkugaA</span><br></pre></td></tr></table></figure>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> <strong>性能优化</strong></li>
+</ul>
+<p>最初，扫描性能这块没有经过严谨的测试，只是做了一些粗略的控制。当webshell检测脚本部署到一些web目录深度较大、文件数量较多、业务比较多的机器上的时候，性能出现了瓶颈，磁盘io一度飙高到90%以上且持续时间较长，没法完了，赶紧下线了webshell扫描的功能。影响到业务，锅非常大！</p>
+<p>webshell检测主要靠遍历目录／文件的方式，正则批评特征函数进行检测，当时优化的思路是引入cgroup来控制，同时在代码中引入一些特征变量来做控制：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1.最大目录深度；（避免目录过深导致的内存消耗）max_directory_depth </span><br><span class="line"></span><br><span class="line">2.最大扫描文件大小；（避免大文件都会消耗过多的资源）max_file_size </span><br><span class="line"></span><br><span class="line">3.目录遍历时间间隔；（避免大文件都会消耗过多的IO资源）walkdir_time_span </span><br><span class="line"></span><br><span class="line">4.文件检查间隔；（避免CPU利用率会爬升到100%）regex_time_span</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/03/20/82jsJJ.md.png" alt="image"></p>
+<p>设置不同regex_time_span值，生成不同时间间隔下的系统资源损耗的实验结果,取200s中的平均值（实验数据）：</p>
+<p><img src="https://s1.ax1x.com/2020/03/20/82vGTO.md.png" alt="image"></p>
+<p>实验后关键参数取值如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">max_directory_depth = 10</span><br><span class="line">max_file_size = 100000</span><br><span class="line">walkdir_time_span = 0.005</span><br><span class="line">regex_time_span = 0.05</span><br></pre></td></tr></table></figure>
+<p>优化前后webshell扫描性能（IO）对比：</p>
+<p><img src="https://s1.ax1x.com/2020/03/20/82vs78.md.png" alt="image"></p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> <strong>webshell规则优化</strong></li>
+</ul>
+<p>webshell监控效果展示：</p>
+<p><img src="https://s1.ax1x.com/2020/03/21/8WGlVI.md.png" alt="image"></p>
+<p>添加互联网收集的一些webshell规则特征（php、java）：</p>
+<p><img src="https://s1.ax1x.com/2020/03/20/82xeDP.md.png" alt="image"></p>
+<p>收集了175个webshell文件和500个正常文件进行实验：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">查杀率（优化前）：111/175    63%</span><br><span class="line">查杀率（优化后）：147/175    84%</span><br><span class="line">误检率（优化前）：0/500      0％</span><br><span class="line">误检率（优化后）：2/500      0.4%</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>对比</th>
+<th>查杀率</th>
+<th>误检率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>优化前</td>
+<td>63%</td>
+<td>0.0%</td>
+</tr>
+<tr>
+<td>优化后</td>
+<td>84%</td>
+<td>0.4%</td>
+</tr>
+</tbody>
+</table>
+<p>牺牲了误报率，提升了查杀率，可以接受的。</p>
+<h3 id="4-快速分析-amp-流程闭环，提升事件处置效率"><a href="#4-快速分析-amp-流程闭环，提升事件处置效率" class="headerlink" title="4.快速分析&amp;流程闭环，提升事件处置效率"></a>4.快速分析&amp;流程闭环，提升事件处置效率</h3><h4 id="数据分析与展示："><a href="#数据分析与展示：" class="headerlink" title="数据分析与展示："></a>数据分析与展示：</h4><p><img src="https://s1.ax1x.com/2020/03/19/8DRbxf.md.png" alt="image"></p>
+<p>前面解决了部署问题、一定程度上优化了入侵检测规则，获取到的检测数据如何进行分析，得到的入侵事件如何有效的反馈处置，只是一个值得思考的问题。</p>
+<p>ossec自己也推出了一个免费的webui界面，对告警内容做展示，但是没有做任何的统计分析，不能满足我们对时机需求，我从两方面最改良了这个问题：</p>
+<ul>
+<li>自写hids web管理后台，入侵事件告警记录、处置情况记录、agent管理、监控组管理、规则管理等；</li>
+<li>结合elk做数据分析，快速的解决数据查询、统计的问题；</li>
+<li>结合其它安全基础设施日志进行关联分析。</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/03/21/8WzvkV.md.png" alt="image"></p>
+<p><img src="https://s1.ax1x.com/2020/03/21/8Ri1ot.md.png" alt="image"></p>
+<h4 id="告警闭环："><a href="#告警闭环：" class="headerlink" title="告警闭环："></a>告警闭环：</h4><p>ossec跑了一段时间，筛选出了一份常规的监控告警项加入邮件告警，其它的事件只纪录不告警。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">风险级别定义：</span><br><span class="line">高：疑似入侵事件或不符合安全配置的检测项，高度关注；</span><br><span class="line">中：非正常业务运维操作，可疑；</span><br><span class="line">低：某些正常的操作，可提供给后续安全事件调查溯源。</span><br><span class="line"></span><br><span class="line">将监控事件划分为（1-12）Level；Level越高，事件风险程度越高，Level&gt;=7时，触发邮件告警。</span><br><span class="line">1-6 Level：一般事件（低）</span><br><span class="line">7-9 Level：可疑事件（中）</span><br><span class="line">10－12 Level：高度关注事件（高）</span><br><span class="line">注：目前采用单一事件告警，后期将关联多个事件计算风险权重后进行组合告警，将降低误报率。</span><br></pre></td></tr></table></figure>
+<p>我们直接把一些风险值较高、且较容易判断的监控告警项同步推送給业务机器负责人，让他们第一事件了解安全状况。<br>接收到告警信息后，运维人员可进行告警反馈（数据同步到安全中心），安全人员可根据反馈情况，进行应急处置及数据分析：</p>
+<p>若告警事件为正常操作，可点击“忽略告警”按钮，</p>
+<p>若该事件确实存在可疑，可点击“确认异常”按钮，事件升级。</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> iptables变化或关闭</li>
+<li style="list-style: none"><input type="checkbox" checked> crontab变化</li>
+<li style="list-style: none"><input type="checkbox" checked> 关键配置文件发生变化</li>
+<li style="list-style: none"><input type="checkbox" checked> 网卡模式发生变化</li>
+<li style="list-style: none"><input type="checkbox" checked> SSH登陆失败</li>
+<li style="list-style: none"><input type="checkbox" checked> SSH爆破</li>
+<li style="list-style: none"><input type="checkbox" checked> ……</li>
+</ul>
+<p>通常，这几类告警，运维人员更加清楚是否异常，方便确认是否为安全问题，同时还可以协助做一些异常排查。</p>
+<p><img src="https://s1.ax1x.com/2020/03/19/8DRzIs.md.png" alt="image"></p>
+<h1 id="0x05-收益"><a href="#0x05-收益" class="headerlink" title="0x05 收益"></a>0x05 收益</h1><p><img src="https://s1.ax1x.com/2020/03/21/8f9nLd.md.png" alt="image"></p>
+<h3 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h3><ul>
+<li style="list-style: none"><input type="checkbox" checked> 数据积累，稳定运行</li>
+<li style="list-style: none"><input type="checkbox" checked> 组合告警，提升告警准确率</li>
+<li style="list-style: none"><input type="checkbox" checked> 入侵检测功能持续优化</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/30/几个高精度IP定位网站/" rel="next" title="几个高精度IP定位网站">
+                <i class="fa fa-chevron-left"></i> 几个高精度IP定位网站
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/22/使用Suricata构建网络层入侵检测/" rel="prev" title="使用Suricata构建网络层入侵检测">
+                使用Suricata构建网络层入侵检测 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://www.maliciouskr.cc/favicon.ico"
+                alt="MaliciousKr" />
+            
+              <p class="site-author-name" itemprop="name">MaliciousKr</p>
+              <p class="site-description motion-element" itemprop="description">面有萌色，胸有丘壑</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0xFFFF-FFFF"><span class="nav-number">1.</span> <span class="nav-text">0xFFFF FFFF</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">2.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-OSSEC相关介绍"><span class="nav-number">3.</span> <span class="nav-text">0x01 OSSEC相关介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-选择OSSEC的原因"><span class="nav-number">4.</span> <span class="nav-text">0x02 选择OSSEC的原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-HIDS架构构思"><span class="nav-number">5.</span> <span class="nav-text">0x03 HIDS架构构思</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HIDS核心功能："><span class="nav-number">5.0.0.1.</span> <span class="nav-text">HIDS核心功能：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HIDS数据处理流程："><span class="nav-number">5.0.0.2.</span> <span class="nav-text">HIDS数据处理流程：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-实践并优化"><span class="nav-number">6.</span> <span class="nav-text">0x04 实践并优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-部署优化，提升覆盖率"><span class="nav-number">6.0.1.</span> <span class="nav-text">1.部署优化，提升覆盖率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-主机及规则管理优化"><span class="nav-number">6.0.2.</span> <span class="nav-text">2.主机及规则管理优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-丰富检测能力，提升安全事件感知效率"><span class="nav-number">6.0.3.</span> <span class="nav-text">3.丰富检测能力，提升安全事件感知效率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-快速分析-amp-流程闭环，提升事件处置效率"><span class="nav-number">6.0.4.</span> <span class="nav-text">4.快速分析&amp;流程闭环，提升事件处置效率</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据分析与展示："><span class="nav-number">6.0.4.1.</span> <span class="nav-text">数据分析与展示：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#告警闭环："><span class="nav-number">6.0.4.2.</span> <span class="nav-text">告警闭环：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x05-收益"><span class="nav-number">7.</span> <span class="nav-text">0x05 收益</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#todo"><span class="nav-number">7.0.1.</span> <span class="nav-text">todo</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MaliciousKr</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
