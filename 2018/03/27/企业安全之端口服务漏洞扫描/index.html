@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x00 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
+<meta name="description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x01 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
 <meta name="keywords" content="安全，信息安全，运维安全，代码审计，渗透测试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="企业安全之端口服务漏洞扫描">
 <meta property="og:url" content="https://maliciouskr.cc/2018/03/27/企业安全之端口服务漏洞扫描/index.html">
 <meta property="og:site_name" content="MaliciousKr.Cc">
-<meta property="og:description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x00 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
+<meta property="og:description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x01 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3TmaF.md.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3TMG9.md.png">
@@ -98,10 +98,10 @@
 <meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3OxQH.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3xAfK.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3xa0s.png">
-<meta property="og:updated_time" content="2021-11-30T16:03:32.827Z">
+<meta property="og:updated_time" content="2021-11-30T16:06:35.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="企业安全之端口服务漏洞扫描">
-<meta name="twitter:description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x00 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
+<meta name="twitter:description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x01 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
 <meta name="twitter:image" content="https://z3.ax1x.com/2021/11/30/o3TmaF.md.png">
 
 
@@ -377,7 +377,7 @@
 
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。</p>
-<h1 id="0x00-实现方法"><a href="#0x00-实现方法" class="headerlink" title="0x00 实现方法"></a>0x00 实现方法</h1><p>对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）都有一定要求，一般的公司不一定有能力做好；外网端口扫描的方式比较直接，虽然也有一些环境上的依赖，比如网络带宽，但总体上来说要比流量分析的要求小得多，大部分公司都能满足，而且还能得到不错的效果。这里我们主要介绍一下外网端口扫描的方法。</p>
+<h1 id="0x01-实现方法"><a href="#0x01-实现方法" class="headerlink" title="0x01 实现方法"></a>0x01 实现方法</h1><p>对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）都有一定要求，一般的公司不一定有能力做好；外网端口扫描的方式比较直接，虽然也有一些环境上的依赖，比如网络带宽，但总体上来说要比流量分析的要求小得多，大部分公司都能满足，而且还能得到不错的效果。这里我们主要介绍一下外网端口扫描的方法。</p>
 <p>外网端口扫描常见工具：Nmap、Masscan、Zmap等。</p>
 <h1 id="0x02-扫描原理"><a href="#0x02-扫描原理" class="headerlink" title="0x02 扫描原理"></a>0x02 扫描原理</h1><p>首先，我们要明白端口的三种状态。分别是：OPEN、CLOSED、FILTERED。</p>
 <p>常见端口扫描分类有TCP全连接扫描、半开扫描（SYN扫描）、FIN扫描、无状态扫描等。</p>
@@ -606,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-实现方法"><span class="nav-number">2.</span> <span class="nav-text">0x00 实现方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-扫描原理"><span class="nav-number">3.</span> <span class="nav-text">0x02 扫描原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-实践"><span class="nav-number">4.</span> <span class="nav-text">0x03 实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-延伸"><span class="nav-number">5.</span> <span class="nav-text">0x04 延伸</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-实现方法"><span class="nav-number">2.</span> <span class="nav-text">0x01 实现方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-扫描原理"><span class="nav-number">3.</span> <span class="nav-text">0x02 扫描原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-实践"><span class="nav-number">4.</span> <span class="nav-text">0x03 实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-延伸"><span class="nav-number">5.</span> <span class="nav-text">0x04 延伸</span></a></li></ol></div>
             
 
           </div>
