@@ -87,14 +87,15 @@
 <meta property="og:site_name" content="MaliciousKr.Cc">
 <meta property="og:description" content="0x00 前言小团队，安全投入有限，入侵检测能力不足，攻防对抗不对等，实在尴尬，迫不得已选择开源方案！ 以下是个人折腾Suricata的一些纪录、想法，不是很成熟、甚至可能观点有错，分享出来，万一有共鸣呢？ 0x01 Suricata简介Suricata是一款基于TCP/IP协议栈解析与安全数据分析引擎：  能够进行实时入侵检测（IDS）、内联入侵预防（IPS）、网络安全监控（NSM）和离线PCA">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9PyWHeIAqUDGNVupWcCaM8ZtKRARPJj1aY0icuibtbFRros1lwjTl9IucKRSfzxAiber7b7HE3jUGsD3g/640">
-<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9Pxyp3Pic6LnCMYJIlCTjr8Z9tS9ZBYhSAda7ib89ZOF9XNThBKibyhicrN5OUEoibmydZOc6jtqm5kaibKg/640">
-<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9Pxyp3Pic6LnCMYJIlCTjr8Z9icTRASPUzMWaM9f9S88YRlddRawQndibpMBqSWhsL8YES8uuuyn6ZGqA/640">
-<meta property="og:updated_time" content="2021-11-30T14:21:31.302Z">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o34F0g.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o34GN9.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o34T4s.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o35rrT.jpg">
+<meta property="og:updated_time" content="2021-11-30T14:36:35.135Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Suricata构建网络层入侵检测">
 <meta name="twitter:description" content="0x00 前言小团队，安全投入有限，入侵检测能力不足，攻防对抗不对等，实在尴尬，迫不得已选择开源方案！ 以下是个人折腾Suricata的一些纪录、想法，不是很成熟、甚至可能观点有错，分享出来，万一有共鸣呢？ 0x01 Suricata简介Suricata是一款基于TCP/IP协议栈解析与安全数据分析引擎：  能够进行实时入侵检测（IDS）、内联入侵预防（IPS）、网络安全监控（NSM）和离线PCA">
-<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9PyWHeIAqUDGNVupWcCaM8ZtKRARPJj1aY0icuibtbFRros1lwjTl9IucKRSfzxAiber7b7HE3jUGsD3g/640">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/11/30/o34F0g.jpg">
 
 
 
@@ -408,7 +409,7 @@
 <li>diy了一个安全分析后台，把已有的hids数据、日志系统的数据关联起来，发现更有价值、紧急层度更高的攻击事件；</li>
 <li>综合分析出来的攻击事件，通过硬件FW、系统iptables阻断。</li>
 </ul>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9PyWHeIAqUDGNVupWcCaM8ZtKRARPJj1aY0icuibtbFRros1lwjTl9IucKRSfzxAiber7b7HE3jUGsD3g/640" alt="image"></p>
+<p><img src="https://z3.ax1x.com/2021/11/30/o34F0g.jpg" alt="image"></p>
 <h1 id="0x04-部署"><a href="#0x04-部署" class="headerlink" title="0x04 部署"></a>0x04 部署</h1><h3 id="Suricata部署："><a href="#Suricata部署：" class="headerlink" title="Suricata部署："></a>Suricata部署：</h3><p>centos7上部署，部署的版本为：Suricata 4.0.5</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install suricata</span><br><span class="line"></span><br><span class="line">yum install wget libpcap-devel libnet-devel pcre-devel gcc-c++ automake autoconf libtool make libyaml-devel zlib-devel file-devel jansson-devel nss-devel</span><br></pre></td></tr></table></figure>
 <h3 id="ELK部署"><a href="#ELK部署" class="headerlink" title="ELK部署"></a>ELK部署</h3><p>我部署的6.2版本，去网上下载，参照着部署即可，具体过程略</p>
@@ -437,11 +438,12 @@
 <h1 id="0x05-数据分析"><a href="#0x05-数据分析" class="headerlink" title="0x05 数据分析"></a>0x05 数据分析</h1><h5 id="1）suricata数据"><a href="#1）suricata数据" class="headerlink" title="1）suricata数据"></a>1）suricata数据</h5><p>创建Kibana看板，进行数据分析最为简易，可以下载Kibana看板所需的json文件，并添加到Kibana中：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://aka.ms/networkwatchersuricatadashboard</span><br><span class="line">https://aka.ms/networkwatchersuricatavisualization</span><br><span class="line">https://aka.ms/networkwatchersuricatasavedsearch</span><br></pre></td></tr></table></figure>
 <p>启动suricata进行网络入侵检测后，生成eve.json文件，使用ELK组件处理该文件，并在Kibana上展示告警，具体界面如下：</p>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9Pxyp3Pic6LnCMYJIlCTjr8Z9tS9ZBYhSAda7ib89ZOF9XNThBKibyhicrN5OUEoibmydZOc6jtqm5kaibKg/640" alt="image"></p>
+<p><img src="https://z3.ax1x.com/2021/11/30/o34GN9.jpg" alt="image"></p>
 <h5 id="2）综合联动分析"><a href="#2）综合联动分析" class="headerlink" title="2）综合联动分析"></a>2）综合联动分析</h5><p>这里的综合联动分析，就是吧目前有点数据关联起来，比如hids、waf（基于elk）、cmdb等</p>
+<p><img src="https://z3.ax1x.com/2021/11/30/o34T4s.jpg" alt="image"></p>
 <p>例如：</p>
 <p>情景1、suricata检测到有大量扫描爆破行为，我把该事件的源IP跟cmdb数据进行关联，如果匹配上了，那么很有可能是内部机器沦陷发起了进一步的扫描攻击，事件紧急程度高，得赶紧响应！</p>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/Jepib8Q2n9Pxyp3Pic6LnCMYJIlCTjr8Z9icTRASPUzMWaM9f9S88YRlddRawQndibpMBqSWhsL8YES8uuuyn6ZGqA/640" alt="image"></p>
+<p><img src="https://z3.ax1x.com/2021/11/30/o35rrT.jpg" alt="image"></p>
 <p>情景2、suricata检测到大量针对系统层面的攻击行为，关连hids日志，若有一定的匹配，那么攻击成功的可能性比较高，需要引起安全的高度关注。</p>
 <p>……</p>
 <p>我这里提到的关联分析也是比较简单粗暴，主要目的是为了减少单一告警的误报率，关联分析过后，准确率会有一定提升（没数据支撑，说个卵）</p>
