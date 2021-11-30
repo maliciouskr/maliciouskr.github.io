@@ -79,17 +79,30 @@
 
 
 
-<meta name="description" content="面有萌色，胸有丘壑">
+<meta name="description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x00 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
 <meta name="keywords" content="安全，信息安全，运维安全，代码审计，渗透测试">
-<meta property="og:type" content="website">
-<meta property="og:title" content="MaliciousKr.Cc">
-<meta property="og:url" content="https://maliciouskr.cc/archives/2019/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="企业安全之端口服务漏洞扫描">
+<meta property="og:url" content="https://maliciouskr.cc/2018/03/27/企业安全之端口服务漏洞扫描/index.html">
 <meta property="og:site_name" content="MaliciousKr.Cc">
-<meta property="og:description" content="面有萌色，胸有丘壑">
+<meta property="og:description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x00 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3TmaF.md.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3TMG9.md.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3LsUK.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/12/01/o8S6eJ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3zlDJ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3Lg8e.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3v4SS.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3vAMQ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3OxQH.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3xAfK.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/11/30/o3xa0s.png">
+<meta property="og:updated_time" content="2021-11-30T16:03:32.827Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MaliciousKr.Cc">
-<meta name="twitter:description" content="面有萌色，胸有丘壑">
+<meta name="twitter:title" content="企业安全之端口服务漏洞扫描">
+<meta name="twitter:description" content="0x00 前言对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。 0x00 实现方法对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/11/30/o3TmaF.md.png">
 
 
 
@@ -119,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://maliciouskr.cc/archives/2019/"/>
+  <link rel="canonical" href="https://maliciouskr.cc/2018/03/27/企业安全之端口服务漏洞扫描/"/>
 
 
 
 
 
-  <title>Archive | MaliciousKr.Cc</title>
+  <title>企业安全之端口服务漏洞扫描 | MaliciousKr.Cc</title>
   
 
 
@@ -154,7 +167,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -282,74 +295,211 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        Um..! 5 posts in total. Keep on posting.
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://maliciouskr.cc/2018/03/27/企业安全之端口服务漏洞扫描/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MaliciousKr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://www.maliciouskr.cc/favicon.ico">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MaliciousKr.Cc">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/06/22/使用Suricata构建网络层入侵检测/" itemprop="url">
-              
-                <span itemprop="name">使用Suricata构建网络层入侵检测</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">企业安全之端口服务漏洞扫描</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-06-22T12:08:23+08:00"
-              content="2019-06-22" >
-          06-22
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-27T22:08:23+08:00">
+                2018-03-27
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>对外端口及服务的监控是整个安全体系中最最最最基础也是非常重要的一个环节。周期性的安全扫描可以快速得到外网资产分布情况，在发现高危端口对外时能够及时提醒安全、运维人员做出相应处理，有效避免入侵事件发生。</p>
+<h1 id="0x00-实现方法"><a href="#0x00-实现方法" class="headerlink" title="0x00 实现方法"></a>0x00 实现方法</h1><p>对企业的外网开放端口进行监控不外乎两种方法：外网端口扫描和流量分析，它俩区别类似于黑盒与白盒审计。从原理上来说流量分析的方式肯定是最准确的，但这对软、硬件（基础设施）都有一定要求，一般的公司不一定有能力做好；外网端口扫描的方式比较直接，虽然也有一些环境上的依赖，比如网络带宽，但总体上来说要比流量分析的要求小得多，大部分公司都能满足，而且还能得到不错的效果。这里我们主要介绍一下外网端口扫描的方法。</p>
+<p>外网端口扫描常见工具：Nmap、Masscan、Zmap等。</p>
+<h1 id="0x02-扫描原理"><a href="#0x02-扫描原理" class="headerlink" title="0x02 扫描原理"></a>0x02 扫描原理</h1><p>首先，我们要明白端口的三种状态。分别是：OPEN、CLOSED、FILTERED。</p>
+<p>常见端口扫描分类有TCP全连接扫描、半开扫描（SYN扫描）、FIN扫描、无状态扫描等。</p>
+<p><strong>TCP全连接扫描</strong></p>
+<p>是一种最为普通的扫描方法，这种扫描方法的特点是：准确性比较高，但是需要完成整个的三次握手流程，而且对于filtered的端口需要进行在timeout之前的等待，所以严重的拖慢了扫描速度，容易被防火墙和IDS(防入侵系统)发现。</p>
+<p><a href="https://imgtu.com/i/o3TmaF" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3TmaF.md.png" alt="o3TmaF.md.png"></a></p>
+<p><strong>半开扫描（SYN扫描）</strong></p>
+<p>与上面的TCP全连接扫描类似。不同的是，扫描器向目标主机的一个端口发送请求连接的SYN包，扫描器在收到SYN/ACK后，不是发送的ACK应答而是发送RST包请求断开连接。这样，三次握手就没有完成，无法建立正常的TCP连接。因此，这次扫描就不会被记录到系统日志中。这种扫描技术一般不会在目标主机上留下扫描痕迹，扫描速度相对较快。</p>
+<p><a href="https://imgtu.com/i/o3TMG9" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3TMG9.md.png" alt="o3TMG9.md.png"></a></p>
+<p><strong>FIN扫描</strong></p>
+<p>是一种非常快的扫描，因为直接给目标端口发送一个带FIN标志位的包，开放(有服务监听的)的端口见到FIN包会将其丢弃，而CLOSED状态的端口则会照常的发送一个RST包，告知这个端口没有监听服务。但是，这种扫描有一个严重的缺点，那就是FILTERED状态的端口也会直接丢弃。因此不能够区分OPEN/FILTERD两种状态的端口，只能区分这两种与CLOSED之间的区别。</p>
+<p><strong>无状态扫描</strong></p>
+<p>我们知道，tcp连接是有状态的，需要对SYN-ACK包进行seq number的校验这个等待连接的过程需要在缓冲区占用很大的资源，因此限制了扫描的速度。但是，无状态扫描中，比如zmap记录了revicer ip、hash之后保存到send port 和seq number，然后再等待SYN-ACK中返回的相应信息直接进行校验，而不需要建立连接。通俗的来说，传统的扫描方式是1对1的建立连接通信进行验证，而无状态的扫描就是批量的把请求撒出去，然后记录有回应的IP。因此，效率上可以达到了成千上万倍的提高。但是同时，由于无状态的发包方式，如果遇到丢包的情况，不像有连接时候会进行重复查询，而是直接没有回应，因此准确率上不如SYN扫描那么准确。</p>
+<h1 id="0x03-实践"><a href="#0x03-实践" class="headerlink" title="0x03 实践"></a>0x03 实践</h1><p>就目前的服务器量级来看，使用python调用nmap来进行端口扫描可以满足日常的安全工作的需要。</p>
+<p>为什么选择nmap？</p>
+<p>（1）  随大流，nmap相关资料多，而且很多商用扫描器也是集成nmap扫描结果。</p>
+<p>（2）  nmap扫描速度，肯定没有masscan、Zmap快，但是扫描结果有对服务banner和版本的探测，更重要的是有操作系统的探测。在云平台部署zmap等无状态扫描，会瞬间发出大量数据包，公有云EIP带宽QoS超过会立刻丢弃，对扫描结果有很大影响。</p>
+<p>（3）  libnmap 对扫描结果解析的相对完美，方便的提取想要的数据到数据库中。</p>
+<p>端口扫描之后，我们还可以做些什么？</p>
+<p>（1） 对新暴发的漏洞、组件漏洞做企业内部评估，例如：各种未授权访问漏洞、各种RCE漏洞等等。这里我参考了一些巡风的漏洞扫描插件。</p>
+<p>（2）评估高危端口变化趋势，也是衡量企业安全管理人员工作成果的一个手段。</p>
+<p>（3）对企业对外端口服务以及漏洞分布有清晰的了解。</p>
+<p>需求：</p>
+<p>（1）对外网存活主机端口探测、对主机扫描范围设置、端口扫描结果存储</p>
+<p>（2）对发现的端口服务进行进一步漏洞扫描</p>
+<p>（3）提供可维护的白名单机制</p>
+<p>（4）提供周期性扫描设置、Email报警、微信报警</p>
+<p>（5）report：操作系统类型分布、对外服务类型分布、WEB服务类型分布</p>
+<p>（6）告警处置流程、保证处置实效性、罚款制度</p>
+<p>实现：</p>
+<p><a href="https://imgtu.com/i/o3LsUK" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3LsUK.jpg" alt="o3LsUK.jpg"></a></p>
+<p>使用libnmap后台调用nmap发起扫描：</p>
+<p><a href="https://imgtu.com/i/o8S6eJ" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/12/01/o8S6eJ.png" alt="o8S6eJ.png"></a></p>
+<p>针对端口扫描结果发起组件（服务）漏洞扫描：</p>
+<p><a href="https://imgtu.com/i/o3zlDJ" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3zlDJ.png" alt="o3zlDJ.png"></a></p>
+<p>如下，针对memcache未授权访问漏洞进行验证的扫描插件（参考巡风）：</p>
+<p><a href="https://imgtu.com/i/o3Lg8e" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3Lg8e.jpg" alt="o3Lg8e.jpg"></a></p>
+<p>扫描任务：</p>
+<p><a href="https://imgtu.com/i/o3v4SS" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3v4SS.png" alt="o3v4SS.png"></a></p>
+<p>端口扫描结果：</p>
+<p><a href="https://imgtu.com/i/o3vAMQ" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3vAMQ.png" alt="o3vAMQ.png"></a></p>
+<p>服务漏洞扫描结果：</p>
+<p><a href="https://imgtu.com/i/o3OxQH" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3OxQH.png" alt="o3OxQH.png"></a></p>
+<p>端口服务分布统计：</p>
+<p><a href="https://imgtu.com/i/o3xAfK" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3xAfK.png" alt="o3xAfK.png"></a></p>
+<p>微信接收告警：</p>
+<p><a href="https://imgtu.com/i/o3xa0s" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/11/30/o3xa0s.png" alt="o3xa0s.png"></a></p>
+<h1 id="0x04-延伸"><a href="#0x04-延伸" class="headerlink" title="0x04 延伸"></a>0x04 延伸</h1><p>端口扫描系统除了可以起到监控外网开放的新增高危端口的作用之外，还可以考虑从以下几个方面扩展一下它的功能和效果，以实现效用的最大化，安全能力输出最大化：</p>
+<p><strong>1. 与系统漏洞扫描器联动</strong></p>
+<p>对于非安全的同学来说，他们可能很难理解一个外网开放端口能造成多大的危害，所以经常会出现当安全人员找到他们的时候，他们不认为这是一个安全问题或者不是很重视，因此沟通成本比较高。如果针对端口扫描的结果在针对性的发起漏洞扫描，得到具体的漏洞，这样推动解决效率会更高，别人也更愿意买帐。</p>
+<p><strong>2. 与Web漏洞扫描器联动</strong></p>
+<p>好处同上一点一样，此外，自动化的实现对web端口服务进行web漏洞扫描，可以更大范围、更快速的发现风险。</p>
+<p><strong>3. 与内部漏洞管理系统联动</strong></p>
+<p>将扫描结果自动录入漏洞管理系统，方便漏洞跟踪管理。</p>
+<p><strong>4. 制度推动技术执行落地</strong></p>
+<p>端口扫描服务运行前期，经常扫描出大量对外端口，带来很大的安全隐患。鉴于此种情况，我们内部约定了一个制度，对端口未及时处理的负责人进行罚款。既可以推动事件处理，又可以攒集活动经费。当然我们并不是为了罚款而罚款，只希望通过这种方式来加强大家对安全隐患的重视程度，保障业务的稳定。</p>
+<p><strong>参考：</strong></p>
+<p><a href="http://www.freebuf.com/articles/rookie/128526.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/rookie/128526.html</a></p>
+<p><a href="https://tech.meituan.com/security_port_monitor.html" target="_blank" rel="noopener">https://tech.meituan.com/security_port_monitor.html</a></p>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/30/几个高精度IP定位网站/" rel="next" title="几个高精度IP定位网站">
+                <i class="fa fa-chevron-left"></i> 几个高精度IP定位网站
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/15/使用OSSEC构建主机层入侵检测/" rel="prev" title="使用OSSEC构建主机层入侵检测">
+                使用OSSEC构建主机层入侵检测 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -357,6 +507,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -377,8 +531,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -433,6 +596,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-实现方法"><span class="nav-number">2.</span> <span class="nav-text">0x00 实现方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-扫描原理"><span class="nav-number">3.</span> <span class="nav-text">0x02 扫描原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-实践"><span class="nav-number">4.</span> <span class="nav-text">0x03 实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-延伸"><span class="nav-number">5.</span> <span class="nav-text">0x04 延伸</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -562,6 +741,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
